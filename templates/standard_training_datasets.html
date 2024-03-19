@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container my-3">
+  <div class="jumbotron jumbotron-fluid bg-light">
+    <div class="container">
+      <h1 class="display-4">Choose Datasets</h1>
+      <p class="lead">
+        This is a modified jumbotron that occupies the entire horizontal space
+        of its parent.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    {% for dataset in datasets %}
+    <div class="col-sm-4">
+      <a
+        class="card text-black text-decoration-none p-2 bg-light border rounded"
+        href=""
+      >
+        <img src="https://picsum.photos/600/300" class="card-img-top" />
+        <div class="card-body">
+          <h2 class="">{{ dataset.name }}</h2>
+          <p class="card-text">{{ dataset.description }}</p>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

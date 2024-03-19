@@ -178,37 +178,37 @@
     webcam.flip();
   }
   function startWebCam() {
-    webcam
-      .start()
-      .then((result) => {
-        const canvas = document.querySelector("canvas");
-        const ctx = canvas.getContext("2d");
-        const video = document.querySelector("video");
-        video.addEventListener("play", () => {
-          function step() {
-            // Lấy kích thước của video
-            const videoWidth = video.videoWidth;
-            const videoHeight = video.videoHeight;
+      webcam
+        .start()
+        .then((result) => {
+          const canvas = document.querySelector("canvas");
+          const ctx = canvas.getContext("2d");
+          const video = document.querySelector("video");
+          video.addEventListener("play", () => {
+            function step() {
+              // Lấy kích thước của video
+              const videoWidth = video.videoWidth;
+              const videoHeight = video.videoHeight;
 
-            // Tính toán kích thước hình vuông
-            const size = Math.min(videoWidth, videoHeight);
+              // Tính toán kích thước hình vuông
+              const size = Math.min(videoWidth, videoHeight);
 
-            // Tính toán vị trí để cắt video theo chiều ngang giữa để tạo thành hình vuông
-            const offsetX = (videoWidth - size) / 2;
-            const offsetY = (videoHeight - size) / 2;
+              // Tính toán vị trí để cắt video theo chiều ngang giữa để tạo thành hình vuông
+              const offsetX = (videoWidth - size) / 2;
+              const offsetY = (videoHeight - size) / 2;
 
-            // Cắt video chỉ lấy hình vuông
-            ctx.drawImage(
-              video,
-              offsetX,
-              offsetY,
-              size,
-              size,
-              0,
-              0,
-              canvas.width,
-              canvas.height
-            );
+              // Cắt video chỉ lấy hình vuông
+              ctx.drawImage(
+                video,
+                offsetX,
+                offsetY,
+                size,
+                size,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+              );
 
             // Gọi lại hàm này để vẽ tiếp mỗi frame của video
             requestAnimationFrame(step);
