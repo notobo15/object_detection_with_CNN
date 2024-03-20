@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from . import models
 
+from tensorflow.keras.datasets import cifar10
+import base64
+import numpy as np
 # import tensorflow as tf
 # # import matplotlib.pyplot as plt
 # import numpy as np
@@ -17,7 +20,17 @@ def train(request):
     return render(request, 'train.html') 
 
 def standardTraining(request, detail):
-    return render(request, 'standard_training.html')
+
+   
+    (_, _), (x_test, _) = cifar10.load_data()
+
+    # Chọn một hình ảnh từ tập dữ liệu kiểm tra (ví dụ: hình ảnh đầu tiên)
+    image = x_test[0]
+
+    # Chuyển đổi hình ảnh sang dạng dữ liệu Base64
+    image_base64 = base64.b64encode(image).decode('utf-8')
+    labels = models.Label.objects.all()
+    return render(request, 'standard_training.html', {'labels':labels, 'image_base64': image_base64})
 
 
 
