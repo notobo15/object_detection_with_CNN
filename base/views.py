@@ -1,17 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from . import models
-
-from tensorflow.keras.datasets import cifar10
-import base64
 import numpy as np
-# import tensorflow as tf
-# # import matplotlib.pyplot as plt
-# import numpy as np
-# import io
-# import base64
-# from PIL import Image
-
+import logging
+import os
 
 def home(request):
     return render(request, 'home.html')
@@ -21,17 +13,38 @@ def train(request):
 
 def standardTraining(request, detail):
 
-   
-    (_, _), (x_test, _) = cifar10.load_data()
+    logger = logging.getLogger('django')
 
-    # Chọn một hình ảnh từ tập dữ liệu kiểm tra (ví dụ: hình ảnh đầu tiên)
-    image = x_test[0]
+    logger.info('here goes your message')
 
-    # Chuyển đổi hình ảnh sang dạng dữ liệu Base64
-    image_base64 = base64.b64encode(image).decode('utf-8')
     labels = models.Label.objects.all()
-    return render(request, 'standard_training.html', {'labels':labels, 'image_base64': image_base64})
 
+      # Tạo một từ điển để lưu trữ các hình ảnh cho mỗi nhãn
+    images_by_label = {}
+
+    # Duyệt qua từng nhãn và lấy 10 hình ảnh cho mỗi nhãn
+    for label in labels:
+        images = models.Image.objects.filter(label=label)[:10]  # Lấy 10 hình ảnh đầu tiên cho mỗi nhãn
+        images_by_label[label] = images
+        logger.info(images)
+
+
+    return render(request, 'standard_training.html', {'labels': labels, 'images_by_label': images_by_label})
+
+# # Thêm các nhãn vào cơ sở dữ liệu
+#     for i, class_name in enumerate(class_names):
+#         label, created = models.Label.objects.get_or_create(name=class_name, index=i)
+
+#     # Thêm các ảnh vào cơ sở dữ liệu với nhãn từ 0 đến 9
+#     for class_name in class_names:
+#         class_dir = os.path.join(cifar10_dir, class_name)
+#         label = models.Label.objects.get(name=class_name)
+
+#         image_files = os.listdir(class_dir)
+#         for image_file in image_files:
+#             # Thêm tên ảnh vào cơ sở dữ liệu
+#             image_name = os.path.splitext(image_file)[0]
+#             models.Image.objects.create(name=image_name, label=label)
 
 
 datasets = [

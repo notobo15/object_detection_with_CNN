@@ -12,7 +12,11 @@ class Dataset(models.Model):
 class Label(models.Model):
     name = models.CharField(null=True,max_length=100)
     index = models.IntegerField(null=True)
-    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.DO_NOTHING, null=True, blank=True, default=None)
     img = models.URLField(null=True)
     def __str__(self):
       return f"{self.name}"
+
+class Image(models.Model):
+  name = models.CharField(max_length=100, null=True)
+  label = models.ForeignKey(Label, on_delete=models.DO_NOTHING)

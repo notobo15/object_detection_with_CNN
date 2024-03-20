@@ -152,7 +152,12 @@
         alt="CIFAR-10 Image"
       />
       {% for label in labels %}
-      <div>{{label.name}}</div>
+      <h2>{{ label.name }}</h2>
+      <ul>
+        {% for image in images_by_label.label %}
+        <li><img src="{{ image.url }}.png" /></li>
+        {% endfor %}
+      </ul>
       {% endfor %}
     </div>
     <div class="col-sm-6 pl-sm-2">
