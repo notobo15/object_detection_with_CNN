@@ -4,6 +4,7 @@ astunparse==1.6.3
 certifi==2024.2.2
 charset-normalizer==3.3.2
 Django==5.0.3
+djangorestframework==3.15.1
 dm-tree==0.1.8
 flatbuffers==24.3.7
 gast==0.5.4
@@ -20,8 +21,10 @@ mdurl==0.1.2
 ml-dtypes==0.3.2
 namex==0.0.7
 numpy==1.26.4
+opencv-python==4.9.0.80
 opt-einsum==3.3.0
 packaging==24.0
+pillow==10.2.0
 protobuf==4.25.3
 Pygments==2.17.2
 requests==2.31.0

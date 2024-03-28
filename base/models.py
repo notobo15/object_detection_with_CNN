@@ -4,7 +4,7 @@ from django.db import models
 class Dataset(models.Model):
   name = models.CharField(null=True,max_length=100)
   slug = models.SlugField(null=True)
-  description = models.TextField(max_length=100)
+  description = models.TextField(null=True)
   img = models.URLField(null=True)
   def __str__(self):
       return f"{self.name}"

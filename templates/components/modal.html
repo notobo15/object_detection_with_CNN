@@ -1,0 +1,87 @@
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form action="" id="setting_train">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Settings</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="">
+            <!-- <h4>Train Model</h4> -->
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="epochs">Epochs:</label>
+                <input value="10" min="1" max="100" type="number" class="form-control" name="epochs" id="epochs" />
+              </div>
+              <div class="form-group col-md-6">
+                <label for="patch_sizes">Patch sizes:</label>
+                <input type="number" class="form-control" id="patch_sizes" name="patch_sizes" value="16" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="padding">Padding:</label>
+                <input value="0" min="1" max="100" type="number" class="form-control" name="padding" id="padding" />
+              </div>
+              <div class="form-group col-md-6">
+                <label for="stride">Stride:</label>
+                <input type="number" class="form-control" id="stride" name="stride" value="1" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="optimizer">Optimizer:</label>
+                <select class="form-control" id="optimizer" name="optimizer">
+                  <option selected value="adam">Adam</option>
+                  <option value="sgd">SGD</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="form-group">
+              <label for="loss">Loss:</label>
+              <select class="form-control" id="loss" name="loss">
+                <option value="binary_crossentropy">BinaryCrossentropy</option>
+                <option value="mean_squared_error">MeanSquaredError</option>
+                <option selected value="sparse_categorical_crossentropy">SparseCategoricalCrossentropy</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="activation">Activation:</label>
+                <select class="form-control" id="activation" name="activation">
+                  <option value="relu">Relu</option>
+                  <option value="sigmoid">sigmoid</option>
+                  <option value="softmax" checked>softmax</option>
+                  <option value="tanh">tanh</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="max_pooling2d">MaxPooling2D:</label>
+                <input type="text" value="2" class="form-control" id="max_pooling2d" name="max_pooling2d" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button class="btn btn-danger" type="reset">
+            Reset Default
+            <i class="ml-2 fas fa-history"></i>
+          </button>
+          <button class="btn btn-primary" type="submit">
+            Save
+            <i class="ml-2 fas fa-save"></i>
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+</div>

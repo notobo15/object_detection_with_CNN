@@ -30,3 +30,49 @@
   /* font-weight: bolder; */
   /* font-weight: 500; */
 }
+.images-container img {
+  height: 58px;
+  /* Điều chỉnh kích thước hình ảnh */
+  margin-right: 8px;
+  /* Khoảng cách giữa các hình ảnh */
+  position: relative;
+  /* Để nút xóa có thể được định vị tuyệt đối so với hình ảnh */
+}
+
+.images-container {
+  display: inline-block;
+  position: relative;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: none;
+  /* Ban đầu nút thùng rác được ẩn */
+}
+
+.images-container div:hover .delete-btn {
+  display: block;
+  /* Hiển thị nút khi hover vào container */
+}
+
+.images-container div .delete-btn:hover {
+  filter: drop-shadow(0 0 2px rgba(150, 140, 140, 0.85));
+}
+
+.full-screen-loading {
+  position: fixed; /* Hoặc absolute */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050; /* Đảm bảo nó nằm trên cùng */
+  display: flex;
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center; /* Căn giữa dọc */
+  background-color: rgba(146, 158, 170, 0.5); /* Màu nền Bootstrap Primary với độ mờ */
+}
