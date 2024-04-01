@@ -5,6 +5,10 @@ import tensorflow as tf
 from tensorflow.keras import models, layers
 from tensorflow.keras.utils import to_categorical 
 import logging
+
+import tensorflowjs as tfjs
+
+
 logger = logging.getLogger('django')
 
 
@@ -13,7 +17,7 @@ PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
 class Traning:
   def __init__(self, uuid):
     self.uuid = uuid 
-    self.uuid_path = os.path.join(PROJECT_PATH, 'uploads', uuid)
+    self.uuid_path = os.path.join(PROJECT_PATH, 'static', 'uploads', uuid)
     # self.setting = Setting()
 
   def getData(self, dirData):
@@ -43,15 +47,23 @@ class Traning:
   #           list_filename_path.append((img, classes[label]))
   #       list_data.extend(list_filename_path)
   #   return list_data
+  def remove_tfjs(self, extensions=('.bin', '.json')):
+     for filename in os.listdir(self.uuid_path):
+        if filename.endswith(extensions):
+            filepath = os.path.join(self.uuid_path, filename)
+            os.remove(filepath)
 
   def testing(self):
     path = self.uuid_path
-    logger.info(self.uuid)
+    logger.info(path)
+    self.remove_tfjs()
     # check model if exist then remove    
-    model_path = os.path.join(self.uuid_path, "model.keras")
+    # model_path = os.path.join(self.uuid_path, "model.keras")
+    # model_path = os.path.join(PROJECT_PATH, 'static', 'storage', self.uuid)
+    model_path = self.uuid_path
     print('-----------', model_path)
-    if os.path.exists(model_path):
-      os.remove(model_path)
+    # if not os.path.exists(model_path):
+    #   os.mkdir(model_path)
 
     train_data = self.getData(path)
     # test_data = getData(TEST_DATA)
@@ -88,11 +100,12 @@ class Traning:
     model_training.compile(optimizer='adam', loss='categorical_crossentropy', metrics = ['accuracy'])
     num_classes = len(np.unique(Ytrain))
     Ytrain_one_hot = to_categorical(Ytrain, num_classes=num_classes)
-    model_training.fit(Xtrain, Ytrain_one_hot, epochs=100)
+    model_training.fit(Xtrain, Ytrain_one_hot, epochs=10)
 
 
-    model_training.save(model_path)
+    # model_training.save(model_path)
     # model_training.save(f"model-v1.h5")
+    tfjs.converters.save_keras_model(model_training, model_path)
 
 
 

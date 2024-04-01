@@ -11,11 +11,9 @@
   </div>
   <div class="row">
     {% for dataset in datasets %}
-    <div class="col-sm-4">
-      <a
-        class="card text-black text-decoration-none p-2 bg-light border rounded"
-        href="{% url 'standardTrainingDetail' slug=dataset.slug|urlencode %}"
-      >
+    <div class="col-md-4 mb-4">
+      <a class="card text-black text-decoration-none p-2 bg-light border rounded h-100"
+        href="{% url 'standardTrainingDetail' slug=dataset.slug|urlencode %}">
         <img src="https://picsum.photos/600/300" class="card-img-top" />
         <div class="card-body">
           <h2 class="">{{ dataset.name }}</h2>

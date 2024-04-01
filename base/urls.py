@@ -15,5 +15,6 @@ urlpatterns = [
    path('predict2', views.PredictImageCustomTrain.as_view(), name='predictCustomTrain'),
 
    path('predict', views.PredictImageView.as_view(), name='predict_image'),
-   path('train-model', views.train_model, name='train-model')
+   path('train-model', views.train_model, name='train-model'),
+   path('standard-train-model', views.standard_train_model, name='standard-train-model')
 ]

@@ -33,6 +33,7 @@ function delete_class(e) {
 }
 
 $(document).ready(function () {
+  changeColorProcessBar()
   var index = 1
   $(".btn_add_a_class").click(function () {
     //oninput="adjustWidth(this)"
@@ -295,61 +296,65 @@ function getCookie(name) {
   }
   return cookieValue;
 }
+let uuid = localStorage.getItem("uuid");
+$("document").ready(async function () {
+  model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
+  // console.log('Load model');
+  // console.log(model.summary());
+});
+
+$("#btn_predict").click(async function () {
+  await loadingEle.show();
+  // 1. Chuyen anh ve tensor
+  let image = $('#imagePreview')[0];
+  let img = tf.browser.fromPixels(image);
+  let normalizationOffset = tf.scalar(255 / 2); // 127.5
+  let tensor = await img
+    .resizeNearestNeighbor([112, 112])
+    .toFloat()
+    .sub(normalizationOffset)
+    .div(normalizationOffset)
+    .reverse(2)
+    .expandDims();
+  // 2. Predict
+  let predictions = await model.predict(tensor);
+  predictions = predictions.dataSync();
+  // console.log(predictions);
+  // const FLOWER_CLASS = ['daisy', 'dandelion', 'roses', 'sunflowers', 'tulips']
+  let result = await Array.from(predictions)
+    .map(function (p, i) {
+      return {
+        probability: (p * 100).toFixed(1),
+        className: FLOWER_CLASS[i]
+      };
+    })
+  // .sort(function (a, b) {
+  //   return b.probability - a.probability;
+  // });
+  console.log(result);
+  await loadingEle.hide();
+  let html = ``
+  result.forEach((item) => {
+    html += `
+    <div class="d-flex justify-content-between align-items-center">
+    <h6 class="mb-0" style="width: 30%">${item.className}</h6>
+    <div class="progress mb-3" style="width:70%; height: 29px; border-radius: 6px">
+      <div class="progress-bar" role="progressbar" style="width: ${item.probability}%; color: #000;" aria-valuenow="${item.probability}" aria-valuemin="0" aria-valuemax="100">
+        ${item.probability}%
+      </div>
+    </div>
+  </div>
+    `
+  })
+  $("#output").html(html)
+  changeColorProcessBar()
 
 
-$("#btn_predict").click(function () {
-  // var formData = new FormData($("#form_predict")[0]);
-  var formData = new FormData();
-  formData.append('image', $('#upload_img')[0].files[0]);
-  formData.append('dataset', localStorage.getItem("uuid"));
-  console.log(formData)
-  var csrftoken = getCookie('csrftoken');
-
-  $.ajaxSetup({
-    headers: {
-      'X-CSRFToken': csrftoken
-    }
-  });
-  $.ajax({
-
-    url: "/predict2",
-    type: "POST",
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      // Handle success response
-      console.log(response);
-
-      let html = ``
-      // response?.forEach((item, index) => {
-
-      //   html += `
-      //               <div class="d-flex justify-content-between align-items-center mb-2">
-      //                   <h6 class="mb-0" style="width: 30%">${item.name}</h6>
-      //                   <div class="progress" style="width: 70%; height: 29px; border-radius: 6px">
-      //                       <div class="progress-bar" role="progressbar" style="width: ${item.accuracy * 100}%; color: #000;" aria-valuenow="${item.accuracy * 100}" aria-valuemin="0" aria-valuemax="100">
-      //                           ${Math.round(item.accuracy * 100)}%
-      //                       </div>
-      //                   </div>
-      //               </div>
-      //           `
-      // })
-      // $("#output").empty();
-      // $("#output").html(html)
-      // changeColorProcessBar();
-    },
-    error: function (xhr, status, error) {
-      // Handle error
-      console.log(error)
-      // ShowToast(jQuery.parseJSON(xhr.responseText)?.image[0])
-    }
-  });
 });
 
 $('#upload_img').change(function () {
   const file = this.files[0];
-  console.log(file)
+  // console.log(file)
   if (file) {
     const reader = new FileReader();
     reader.onload = function (e) {
@@ -360,4 +365,20 @@ $('#upload_img').change(function () {
     $('#imagePreview').attr('src', '');
   }
 });
+// const FLOWER_CLASS = {
+//   0: 'daisy',
+//   1: 'dandelion',
+//   2: 'roses',
+//   3: 'sunflowers',
+//   4: 'tulips'
+// };
 
+function changeColorProcessBar() {
+
+  var colors = ["#dc2f02", "#ccd5ae", "#d4a373", "#cdb4db", "#00b4d8", "#588157", "#a3b18a", "#eae2b7", "#e9c46a", "#e76f51"];
+
+  // Lặp qua từng div và đặt màu cho chúng
+  $(".progress-bar").each(function (index) {
+    $(this).css("background-color", colors[index]);
+  });
+}

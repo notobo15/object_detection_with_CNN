@@ -1,46 +1,41 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 <div class="container my-3">
-  <div class="jumbotron jumbotron-fluid bg-light">
+  <div class="jumbotron jumbotron-fluid bg-light pb-2">
     <div class="container">
       <h1 class="display-4">New Project</h1>
       <p class="lead">
-        This is a modified jumbotron that occupies the entire horizontal space
-        of its parent.
+        Use ready-made datasets in TensorFlow for fast and easy model trials.
       </p>
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-4">
-      <a
-        class="card text-black text-decoration-none p-2 bg-light border rounded"
-        href="{% url 'standardTraining' %}"
-      >
-        <img src="https://picsum.photos/600/300" class="card-img-top" />
+    <div class="col-sm-6">
+      <a class="card text-dark text-decoration-none p-2 bg-light border rounded" href="{% url 'standardTraining' %}">
+        <img src="{% static 'images/tensorflow.png' %}" class="card-img-top" />
         <div class="card-body">
           <h2 class="">Standard Training</h2>
           <p class="card-text">
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
+            Utilize TensorFlow's pre-existing datasets to quickly train models for object detection, streamlining the
+            process without the need for custom data gathering.
           </p>
         </div>
       </a>
     </div>
-    <div class="col-sm-4">
-      <a
-        class="card text-black text-decoration-none p-2 bg-light border rounded"
-        href=""
-      >
-        <img src="https://picsum.photos/600/300" class="card-img-top" />
+    <div class="col-sm-6">
+      <a class="card text-dark text-decoration-none p-2 bg-light border rounded" href="">
+        <img src="{% static 'images/create.webp' %}" class="card-img-top" />
         <div class="card-body">
           <h2 class="">New Training</h2>
           <p class="card-text">
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
+            Craft your own image-based dataset for object detection, offering complete control over the data used for
+            training models tailored to specific detection tasks.
           </p>
         </div>
       </a>
     </div>
-    <div class="col-sm-4">
+    <!-- <div class="col-sm-4">
       <a
         class="card text-black text-decoration-none p-2 bg-light border rounded"
         href=""
@@ -54,7 +49,7 @@
           </p>
         </div>
       </a>
-    </div>
+    </div> -->
   </div>
 </div>
 {% endblock %}

@@ -54,13 +54,13 @@
           <h6 class="pl-3 pt-3">{{ images|length }} Images Samples</h6>
 
           <div class="d-flex align-items-center p-3">
-            <!-- <button
+            <button
               type="button"
-              class="sample-source-btn btn p-2 d-flex flex-column justify-content-between align-items-center align-self-start gap-1 mr-2"
+              class=" sample-source-btn btn p-2 d-flex flex-column justify-content-between align-items-center align-self-start gap-1 mr-2"
             >
               <i class="fas fa-upload" style="font-size: 20px"></i>
               <span>Upload</span>
-            </button> -->
+            </button>
             <ol class="p-0 m-0" style="
                 list-style: none;
                 white-space: nowrap;
@@ -285,15 +285,7 @@
         });
     }
 
-    function changeColorProcessBar() {
-
-      var colors = ["#dc2f02", "#ccd5ae", "#d4a373", "#cdb4db", "#00b4d8", "#588157", "#a3b18a", "#eae2b7", "#e9c46a", "#e76f51"];
-
-      // Lặp qua từng div và đặt màu cho chúng
-      $(".progress-bar").each(function (index) {
-        $(this).css("background-color", colors[index]);
-      });
-    }
+  
 
     function ShowToast(text = "This is Toast") {
       Toastify({

@@ -92,6 +92,16 @@ from rest_framework.response import Response
 from .serializers import ImageSerializer
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
+import uuid
+from django.core.files.storage import default_storage
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .train_model import train_model_async
+from CNN.Building import Traning
+
+
 class CustomFileSystemStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
         self.delete(name)
@@ -227,10 +237,6 @@ class PredictImageCustomTrain(APIView):
         else:
             return Response(serializer.errors, status=400)
 
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .train_model import train_model_async
-from CNN.Building import Traning
 @api_view(['POST'])
 def start_training(request):
     logger.info(request.data.data)
@@ -238,9 +244,11 @@ def start_training(request):
 
 
 def customTraining(request):
-    return render(request, 'custom-training.html')
-import uuid
-from django.core.files.storage import default_storage
+    labels = ['daisy', 'dandelion', 'roses', 'sunflowers', 'tulips'] 
+    return render(request, 'custom-training.html', {'labels':labels})
+
+
+
 def train_model(request):
     if request.method == 'POST':
 
@@ -278,3 +286,25 @@ def train_model(request):
         return JsonResponse({'message': 'Files uploaded successfully','uuid': unique_id})
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
+
+from CNN.Training import FlowerClassifier
+import shutil
+def standard_train_model(request):
+    if request.method == 'POST':
+        dataset = request.POST.get('dataset')
+        logger.info(dataset)
+        # unique_id = uuid.uuid4().hex
+        unique_id = 'f0ace91f3ea44acdb7ab17196a376f17'
+        PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
+        folder_dataset = os.path.join(PROJECT_PATH, 'static', 'datasets', 'cifar10')
+        folder = os.path.join(PROJECT_PATH, 'static', 'uploads', unique_id)
+        # os.makedirs(folder, exist_ok=True)
+        # shutil.copytree(folder_dataset, folder)
+
+        flower_classifier = FlowerClassifier()
+        flower_classifier.build_model()
+        train_generator, validation_generator = flower_classifier.make_data(folder_dataset)
+        flower_classifier.train_model(train_generator, validation_generator)
+        flower_classifier.save_model(folder)
+
+        return HttpResponse({'adsfafasdfds'})

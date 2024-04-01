@@ -76,3 +76,9 @@
   align-items: center; /* Căn giữa dọc */
   background-color: rgba(146, 158, 170, 0.5); /* Màu nền Bootstrap Primary với độ mờ */
 }
+
+
+.card-img-top {
+  height: 175px;
+  object-fit: cover;
+}
