@@ -16,5 +16,7 @@ urlpatterns = [
 
    path('predict', views.PredictImageView.as_view(), name='predict_image'),
    path('train-model', views.train_model, name='train-model'),
-   path('standard-train-model', views.standard_train_model, name='standard-train-model')
+   path('train-model2', views.train_model2, name='train-model2'),
+   path('standard-train-model', views.standard_train_model, name='standard-train-model'),
+   path('migrate-data', views.migarate_data, name='migrate-data')
 ]

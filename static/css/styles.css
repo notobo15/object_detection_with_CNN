@@ -55,7 +55,8 @@
   /* Ban đầu nút thùng rác được ẩn */
 }
 
-.images-container div:hover .delete-btn {
+.images-container div:hover .delete-btn,
+.images-container a:hover .delete-btn  {
   display: block;
   /* Hiển thị nút khi hover vào container */
 }
@@ -63,7 +64,9 @@
 .images-container div .delete-btn:hover {
   filter: drop-shadow(0 0 2px rgba(150, 140, 140, 0.85));
 }
-
+.images-container a .delete-btn:hover {
+  filter: drop-shadow(0 0 2px rgba(150, 140, 140, 0.85));
+}
 .full-screen-loading {
   position: fixed; /* Hoặc absolute */
   top: 0;
@@ -81,4 +84,85 @@
 .card-img-top {
   height: 175px;
   object-fit: cover;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-animation {
+  opacity: 0; /* Khởi tạo các card là không hiển thị */
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.card-animation:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.card-animation:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.card-animation:nth-child(3) {
+  animation-delay: 0.5s;
+}
+.card-animation:nth-child(4) {
+  animation-delay: 0.8s;
+}
+.card-animation:nth-child(5) {
+  animation-delay: 1s;
+}
+.card-animation:nth-child(6) {
+  animation-delay: 1.3s;
+}
+.navbar-nav .nav-link {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  width:180px;
+  /* transition: background-color 0.2s ease */
+}
+.navbar-nav .nav-item:hover .nav-link {
+  color: #fff !important;
+  background: #1967d2;
+}
+.btn_guide {
+  font-size: 20px;
+}
+
+.btn_guide_detail {
+  top: 0;
+  width: 280px;
+  right: 100%;
+  z-index: 1;
+  padding: 10px;
+  background: #fff;
+  border-radius: 6px;
+  display: none;
+  position: absolute;
+}
+.btn_guide_detail p {
+  font-size: 14px;
+}
+.btn_guide:hover .btn_guide_detail {
+  display: block;
+}
+
+.btn_modal_setting i.fas.fa-cog {
+  transition: transform 0.3s ease;
+}
+
+.btn_modal_setting:hover i.fas.fa-cog {
+  transform: rotate(90deg);
+}
+.btn_add_a_class:hover {
+  border-color: #007bff !important;
+  color: #007bff !important;
 }

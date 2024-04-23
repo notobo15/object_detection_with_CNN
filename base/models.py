@@ -5,7 +5,7 @@ class Dataset(models.Model):
   name = models.CharField(null=True,max_length=100)
   slug = models.SlugField(null=True)
   description = models.TextField(null=True)
-  img = models.URLField(null=True)
+  img = models.CharField(null=True,max_length=200)
   def __str__(self):
       return f"{self.name}"
 
@@ -13,7 +13,7 @@ class Label(models.Model):
     name = models.CharField(null=True,max_length=100)
     index = models.IntegerField(null=True)
     dataset = models.ForeignKey(Dataset, on_delete=models.DO_NOTHING, null=True, blank=True, default=None)
-    img = models.URLField(null=True)
+    # img = models.CharField(null=True,max_length=200)
     def __str__(self):
       return f"{self.name}"
 

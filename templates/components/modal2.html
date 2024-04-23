@@ -1,0 +1,113 @@
+<div class="modal fade" id="modal_setting" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-center" role="document">
+    <form action="" id="setting_train">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Settings</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <!-- <h4>Train Model</h4> -->
+              <div class="mb-3 row mx-0">
+                <label for="epochs" class="col-sm-3 col-form-label">Epochs:</label>
+                <div class="col-sm-8">
+                  <input value="20" min="1" max="100" type="number" class="form-control" name="epochs" id="epochs" />
+                </div>
+                <div class="col-sm-1 d-flex align-items-center position-relative btn_guide" type="button">
+                  <i class="fas fa-question-circle"></i>
+                  <div class="btn_guide_detail shadow border">
+                      <h6>Epochs</h6>
+                      <hr />
+                      <p>One epoch means that each and every sample in the training dataset has been fed through the training model at least once. If your epochs are set to 50, for example, it means that the model you are training will work through the entire training dataset 50 times. Generally the larger the number, the better your model will learn to predict the data.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3 row mx-0">
+                <label for="patch_sizes" class="col-sm-3 col-form-label">Patch sizes:</label>
+                <div class="col-sm-8">
+                  <input type="number" class="form-control" id="patch_sizes" name="patch_sizes" value="32" />
+                </div>
+                <div class="col-sm-1 d-flex align-items-center position-relative btn_guide" type="button">
+                  <i class="fas fa-question-circle"></i>
+                  <div class="btn_guide_detail shadow border">
+                      <h6>Patch sizes</h6>
+                      <hr />
+                      <p>A batch is a set of samples used in one iteration of training. For example, let's say that you have 80 images and you choose a batch size of 16. This means the data will be split into 80 / 16 = 5 batches. Once all 5 batches have been fed through the model, exactly one epoch will be complete.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3 row mx-0">
+                <label for="optimizer" class="col-sm-3 col-form-label">Optimizer:</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="optimizer" name="optimizer">
+                    <option selected value="adam">Adam</option>
+                    <option value="sgd">SGD</option>
+                  </select>
+                </div>
+                <div class="col-sm-1 d-flex align-items-center position-relative btn_guide" type="button">
+                  <i class="fas fa-question-circle"></i>
+                  <div class="btn_guide_detail shadow border">
+                      <h6>Optimizer</h6>
+                      <hr />
+                      <p>Both Adam and GSD are popular optimization techniques used in training deep neural networks. While Adam is widely adopted due to its efficiency and robustness, GSD offers an alternative approach to address specific optimization challenges, particularly related to vanishing gradients. </p>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3 row mx-0">
+                <label for="test_size" class="col-sm-3 col-form-label">Test Size:</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="test_size" name="test_size">
+                    <option selected value="0.2">0.2 (20%)</option>
+                    <option  value="0.3">0.3 (30%)</option>
+                    <option value="0.4">0.4 (40%)</option>
+                    <option value="0.5">0.5 (50%)</option>
+                  </select>
+                </div>
+                <div class="col-sm-1 d-flex align-items-center position-relative btn_guide" type="button">
+                  <i class="fas fa-question-circle"></i>
+                  <div class="btn_guide_detail shadow border">
+                      <h6>Test Size</h6>
+                      <hr />
+                      <p>The test size determines the ratio of the dataset allocated for testing. For example, if you have a dataset of 1000 samples and you choose a test size of 0.2 (20%), then 20% of the data (200 samples) will be used for testing, and the remaining 80% (800 samples) will be used for training.</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button class="btn btn-danger" type="reset">
+              Reset Default
+              <i class="ml-2 fas fa-history"></i>
+            </button>
+            <button class="btn btn-primary btn_save_setting" type="submit" data-dismiss="modal">
+              Save
+              <i class="ml-2 fas fa-save"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $(".btn_save_setting").click(function (e) {
+      e.preventDefault()
+      // let formData = new FormData($("#setting_train")[0]);
+      var formData = {};
+      $('#setting_train').find('input, select').each(function() {
+        formData[$(this).attr('name')] = $(this).val();
+      });
+      console.log(formData)
+      localStorage.setItem("setting", JSON.stringify(formData))
+      var setting = JSON.parse(localStorage.getItem("setting"))
+      console.log(setting)
+    })
+  })
+
+</script>

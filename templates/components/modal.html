@@ -1,6 +1,6 @@
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-center" role="document">
     <form action="" id="setting_train">
 
       <div class="modal-content">
@@ -16,7 +16,7 @@
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="epochs">Epochs:</label>
-                <input value="10" min="1" max="100" type="number" class="form-control" name="epochs" id="epochs" />
+                <input value="1" min="1" max="100" type="number" class="form-control" name="epochs" id="epochs" />
               </div>
               <div class="form-group col-md-6">
                 <label for="patch_sizes">Patch sizes:</label>
@@ -27,7 +27,7 @@
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="padding">Padding:</label>
-                <input value="0" min="1" max="100" type="number" class="form-control" name="padding" id="padding" />
+                <input value="1" min="1" max="100" type="number" class="form-control" name="padding" id="padding" />
               </div>
               <div class="form-group col-md-6">
                 <label for="stride">Stride:</label>
@@ -85,3 +85,20 @@
 
   </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $("#setting_train").submit(function (e) {
+      e.preventDefault()
+      // let formData = new FormData($("#setting_train")[0]);
+      var formData = {};
+      $('#setting_train').find('input, select').each(function() {
+        formData[$(this).attr('name')] = $(this).val();
+      });
+      localStorage.setItem("setting", JSON.stringify(formData))
+      var setting = JSON.parse(localStorage.getItem("setting"))
+      console.log(setting)
+    })
+  })
+
+</script>

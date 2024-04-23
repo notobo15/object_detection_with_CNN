@@ -1,21 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-{% include 'components/modal.html' %}
+{% include 'components/modal2.html' %}
 
 <div class="container min-vh-100 my-3">
 
-  <h1 class="mb-4">Custom Training</h1>
-  <div class="alert alert-primary" role="alert">
-    A simple primary alert—check it out!
+  <h1 class="mb-4 font-weight-bold text-primary">Custom Training</h1>
+  <div class="alert alert-primary alert-dismissible fade show" role="alert">
+    Craft your own image-based dataset for object detection, offering complete control over the data used for training models tailored to specific detection tasks.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
   <div class="row">
-    <div class="col-sm-7 pr-sm-2">
+    <div class="col-sm-8 pr-sm-2">
       <div class="p-3 border shadow mb-3" style="border-radius: 10px">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h4 class="text-center ">Training</h4>
 
-          <button class="btn" style="outline: none" data-toggle="modal" data-target="#exampleModalCenter">
+          <button class="btn btn_modal_setting" style="outline: none; font-size: 1.5rem;" data-toggle="modal" data-target="#modal_setting">
             <i class="fas fa-cog"></i>
           </button>
         </div>
@@ -30,11 +33,11 @@
         <h5><i class="fas fa-plus mr-2"></i>Add a class</h5>
       </div>
     </div>
-    <div class=" col-sm-5 pl-sm-2">
+    <div class=" col-sm-4 pl-sm-2">
       <div class="bg-light rounded border p-3">
         <h4>Preview</h4>
         <hr />
-        <div class="d-flex align-items-center justify-content-between">
+        {% comment %} <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center justify-content-start">
             <h6 class="mr-3 mb-0">INPUT</h6>
 
@@ -53,16 +56,15 @@
               <option value="webcam">Webcam</option>
             </select>
           </div>
-        </div>
+        </div> {% endcomment %}
         <form id="form_predict" enctype="multipart/form-data">
           <div class="">
             <input name="dataset" value="cifar-10" type="text" hidden />
             <label for="upload_img" class="d-flex flex-column align-items-center justify-content-center btn mt-3 p-3"
               style="background-color: #d2e3fc; color: #1967d2">
               <span><i class="fas fa-upload"></i></span>
-              Choose images from your files, or drag &amp; drop here
-              <input id="upload_img" name="image" type="file" hidden required />
-
+              Choose images from your files
+              <input id="upload_img" name="image"  accept="image/*" type="file" hidden required />
             </label>
           </div>
 
@@ -71,14 +73,14 @@
           </div>
         </form>
         <div>
-          <button style="background-color: #d2e3fc" class="btn w-100 p-3 text-center my-3">
-            <h5 class="font-weight-bold" id="btn_predict" type="submit">PREDICT</h5>
+          <button style="background-color: #d2e3fc" class="btn w-100 p-3 text-center my-3" id="btn_predict">
+            <h5 class="font-weight-bold" type="submit">PREDICT</h5>
           </button>
         </div>
-        <div>
+        <div class="predict_container">
           <h5 class="">OUTPUT:</h5>
           <div id="output">
-            {% for label in labels %}
+            {% comment %} {% for label in labels %}
             <div class="d-flex justify-content-between align-items-center">
               <h6 class="mb-0" style="width: 30%">{{label }}</h6>
               <div class="progress mb-3" style="width: 70%; height: 29px; border-radius: 6px">
@@ -88,7 +90,7 @@
                 </div>
               </div>
             </div>
-            {% endfor %}
+            {% endfor %} {% endcomment %}
           </div>
         </div>
       </div>
@@ -98,10 +100,10 @@
 
 
 <script>
-  var FLOWER_CLASS = {{ labels| safe}}
-  console.log(FLOWER_CLASS)
+  {% comment %} var FLOWER_CLASS = {{ labels| safe}}
+  console.log(FLOWER_CLASS) {% endcomment %}
 </script>
 
-<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
 
 {% endblock %}

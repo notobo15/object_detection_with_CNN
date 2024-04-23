@@ -3,8 +3,31 @@ from django.http import HttpResponseRedirect, StreamingHttpResponse, HttpRespons
 from . import models
 import numpy as np
 import logging
-import os
 import cv2
+from CNN.Training import Training
+import shutil
+import json
+import os
+from PIL import Image
+import uuid
+import tensorflow as tf
+from django.conf import settings
+from django.utils.datastructures import MultiValueDictKeyError
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import ImageSerializer
+from django.core.files.storage import FileSystemStorage
+from django.http import JsonResponse
+import uuid
+from django.core.files.storage import default_storage
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .train_model import train_model_async
+# from CNN.Building import Traning
+from CNN import Setting
+from CNN.Train2 import Building
+import base64
+
 def home(request):
     return render(request, 'home.html')
 
@@ -17,42 +40,18 @@ def train(request):
 logger = logging.getLogger('django')
 
 def standardTrainingDetail(request, slug):
-
+    sizes = int(request.GET.get('sizes', 10))
     dataset = models.Dataset.objects.filter(slug=slug).first()
     labels = models.Label.objects.filter(dataset=dataset)
-
-    # Tạo một danh sách để lưu trữ các cặp nhãn và danh sách hình ảnh tương ứng
     images_by_labels = []
-
-    # Lặp qua từng nhãn và lấy danh sách hình ảnh tương ứng
     for label in labels:
-        images = models.Image.objects.filter(label=label)[:10]
+        images = models.Image.objects.filter(label=label)[:sizes]
         images_by_labels.append((label, images))
-
-    return render(request, 'standard_training.html', {'images_by_labels': images_by_labels})
-
-# # Thêm các nhãn vào cơ sở dữ liệu
-#     for i, class_name in enumerate(class_names):
-#         label, created = models.Label.objects.get_or_create(name=class_name, index=i)
-
-#     # Thêm các ảnh vào cơ sở dữ liệu với nhãn từ 0 đến 9
-#     for class_name in class_names:
-#         class_dir = os.path.join(cifar10_dir, class_name)
-#         label = models.Label.objects.get(name=class_name)
-
-#         image_files = os.listdir(class_dir)
-#         for image_file in image_files:
-#             # Thêm tên ảnh vào cơ sở dữ liệu
-#             image_name = os.path.splitext(image_file)[0]
-#             models.Image.objects.create(name=image_name, label=label)
-
-
+    labels_name = list([label.name for label in labels])
+    return render(request, 'standard_training.html', {'images_by_labels': images_by_labels,'dataset': dataset, 'labels': labels_name})
 
 def standardTraining(request):
-
     datasets = models.Dataset.objects.all()
-    
-
     return render(request, 'standard_training_datasets.html', {'datasets': datasets})
 
 def stream(request):
@@ -72,35 +71,6 @@ def stream():
 
 def video(request):
     return StreamingHttpResponse(stream(), content_type='multipart/x-mixed-replace; boundary=frame')   
-
-
-
-
-
-
-import json
-import os
-import cv2
-from PIL import Image
-import numpy as np
-import uuid
-import tensorflow as tf
-from django.conf import settings
-from django.utils.datastructures import MultiValueDictKeyError
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .serializers import ImageSerializer
-from django.core.files.storage import FileSystemStorage
-from django.http import JsonResponse
-import uuid
-from django.core.files.storage import default_storage
-
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .train_model import train_model_async
-from CNN.Building import Traning
-
 
 class CustomFileSystemStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
@@ -179,7 +149,6 @@ class PredictImageCustomTrain(APIView):
             image = serializer.validated_data['image']
             dataset = serializer.validated_data['dataset']
 
-
             fss = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, "tmp"))
             try:
                 unique_filename = str(uuid.uuid4()) + ".jpg"  # Ví dụ sử dụng UUID
@@ -245,6 +214,11 @@ def start_training(request):
 
 def customTraining(request):
     labels = ['daisy', 'dandelion', 'roses', 'sunflowers', 'tulips'] 
+    uuid = request.COOKIES.get('uuid')
+    print(uuid)
+    if uuid != None:    
+        labels = os.listdir(os.path.join(settings.MEDIA_ROOT,'static', 'uploads', uuid))
+
     return render(request, 'custom-training.html', {'labels':labels})
 
 
@@ -279,7 +253,7 @@ def train_model(request):
 
 
             # ce1bd24590af4e73838dc49710f36a6a 
-            Traning(unique_id).testing()
+            # Traning(unique_id).testing()
             # test1 = Traning('ce1bd24590af4e73838dc49710f36a6a')
             # test1.testing('C://Users//chris//OneDrive//Desktop//detector_python//uploads//ce1bd24590af4e73838dc49710f36a6a')
 
@@ -287,24 +261,169 @@ def train_model(request):
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
 
-from CNN.Training import FlowerClassifier
-import shutil
 def standard_train_model(request):
     if request.method == 'POST':
         dataset = request.POST.get('dataset')
-        logger.info(dataset)
+        setting = json.loads(request.POST.get('setting'))
+        setting_instance = Setting(
+            padding=int(setting.get('padding', 0)),
+            epochs=int(setting.get('epochs', 10)),
+            patch_sizes=int(setting.get('patch_sizes', 32)),
+            stride=int(setting.get('stride', 0)),
+            optimizer=setting.get('optimizer', 'adam'),
+            loss=setting.get('loss', 'categorical_crossentropy'),
+            activation=setting.get('activation', 'softmax'),
+            max_pooling=int(setting.get('max_pooling2d', 2))
+        )
+        logger.info(setting_instance)
         # unique_id = uuid.uuid4().hex
         unique_id = 'f0ace91f3ea44acdb7ab17196a376f17'
-        PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
-        folder_dataset = os.path.join(PROJECT_PATH, 'static', 'datasets', 'cifar10')
+        
+        folder_dataset = os.path.join(PROJECT_PATH, 'static', 'datasets', 'cifar-10')
         folder = os.path.join(PROJECT_PATH, 'static', 'uploads', unique_id)
         # os.makedirs(folder, exist_ok=True)
         # shutil.copytree(folder_dataset, folder)
 
-        flower_classifier = FlowerClassifier()
-        flower_classifier.build_model()
-        train_generator, validation_generator = flower_classifier.make_data(folder_dataset)
-        flower_classifier.train_model(train_generator, validation_generator)
-        flower_classifier.save_model(folder)
+        # flower_classifier = Training(10)
+        # flower_classifier.build_model()
+        # train_generator, validation_generator = flower_classifier.make_data(folder_dataset)
+        # flower_classifier.train_model(train_generator, validation_generator)
+        # flower_classifier.save_model(folder)
 
         return HttpResponse({'adsfafasdfds'})
+PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
+def train_model2(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        data = body['trainingData']
+        setting = body['setting']
+
+        epochs=int(setting.get('epochs', 20))
+        patch_sizes=int(setting.get('patch_sizes', 64))
+        test_size=float(setting.get('test_size', 0.2))
+        optimizer=setting.get('optimizer', 'adam')
+        # setting_instance = Setting(
+        #     padding=int(setting.get('padding', 0)),
+        #     epochs=int(setting.get('epochs', 10)),
+        #     patch_sizes=int(setting.get('patch_sizes', 32)),
+        #     stride=int(setting.get('stride', 0)),
+        #     optimizer=setting.get('optimizer', 'adam'),
+        #     loss=setting.get('loss', 'categorical_crossentropy'),
+        #     activation=setting.get('activation', 'softmax'),
+        #     max_pooling=int(setting.get('max_pooling2d', 2)),
+        #     test_size=int(setting.get('test_size', 0.2))
+        # )
+
+        new_folder_name = str(uuid.uuid4())
+        new_folder_path = os.path.join(PROJECT_PATH, 'static', 'uploads', new_folder_name)
+        # new_folder_path = os.path.join(parent_dir, new_folder_name)
+        os.makedirs(new_folder_path)
+
+        for item in data:
+            label = item['label']
+            images = item['images']
+            
+            label_folder_path = os.path.join(new_folder_path, label)
+            os.makedirs(label_folder_path)
+            
+            index = 0
+            for image_url in images:
+                if image_url.startswith('data:image/'):
+                    image_data = image_url.split(',')[1]
+                    image_binary = base64.b64decode(image_data)
+                    new_image_name = f"base64_{index}.jpg"
+                    index += 1
+                    image_path_destination = os.path.join(label_folder_path, new_image_name)
+                    with open(image_path_destination, 'wb') as file:
+                        file.write(image_binary)
+                else:
+                    new_image_name = os.path.basename(image_url)
+                    image_path_source = PROJECT_PATH + image_url
+                    image_path_destination = os.path.join(label_folder_path, new_image_name)
+                    shutil.copy(image_path_source, image_path_destination)
+
+       
+        # train_model(new_folder_path)
+
+        # flower_classifier = Training(10, setting_instance)
+        # flower_classifier.build_model()
+        # train_generator, validation_generator = flower_classifier.make_data(new_folder_path)
+        # flower_classifier.train_model(train_generator, validation_generator)
+        # flower_classifier.save_model(new_folder_path)
+
+        class_names = [dt['label'] for dt in list(data)]
+            
+        # img_width = img_height = 32
+        num_classes = len(os.listdir(new_folder_path))
+        # classifier = Building(new_folder_path, img_height, img_width, num_classes, class_names, epochs,patch_sizes,optimizer,test_size)
+        # classifier.build_model()
+        # classifier.train2()
+
+        # classifier.evaluate()
+        # classifier.save_model()
+
+        # folder = os.path.join(PROJECT_PATH, 'static', 'uploads', '653da5c0-8b41-47ba-ae52-90095c7190bc')
+        # setting = Setting(padding=0, epochs=10, patch_sizes=32, stride=0, optimizer='adam', loss='categorical_crossentropy', activation='softmax',max_pooling=2, test_size=0.2, num_classes=num_classes)
+        flower_classifier = Training(epochs=epochs, patch_sizes=patch_sizes,test_size=test_size, optimizer=optimizer,num_classes=num_classes,folder_path = new_folder_path)
+
+        # flower_classifier = Training(num_classes)
+        flower_classifier.build_model()
+        train_generator, validation_generator = flower_classifier.make_data()
+        flower_classifier.train_model(train_generator, validation_generator)
+        flower_classifier.save_model()
+
+
+        for folder in class_names:
+            subfolder_path = os.path.join(new_folder_path, folder)
+            if os.path.isdir(subfolder_path):
+                for file_name in os.listdir(subfolder_path):
+                    file_path = os.path.join(subfolder_path, file_name)
+                    try:
+                        if os.path.isfile(file_path):
+                            os.unlink(file_path)
+                    except Exception as e:
+                        print(f"Không thể xóa {file_path}: {e}")
+                os.rmdir(subfolder_path)
+
+        
+
+        # labels = models.Label.objects.filter(dataset= models.Dataset.objects.get(""))
+
+        return JsonResponse({'status': 'success', 'message': 'Model trained successfully', 'uuid': new_folder_name})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+
+def migarate_data(request):
+    PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
+    folder_dataset = os.path.join(PROJECT_PATH, 'static', 'datasets', 'fashion_mnist')
+
+    # class_names = os.listdir(folder_dataset)
+    # class_names = ['0','1','2','3','4', '5', '6', '7', '8', '9']
+    dataset = models.Dataset.objects.get(slug='fashion-mnist')
+    class_names = ['Tshirt', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag',
+                   'Ankle boot']
+    # for class_name in class_names:
+    #     # Lấy đối tượng nhãn dựa trên tên lớp
+    #     label = models.Label.objects.get(name=class_name)
+    #
+    #     # Lấy tất cả các hình ảnh thuộc nhãn này
+    #     images = models.Image.objects.filter(label=label)
+    #
+    #     # Xóa tất cả các hình ảnh
+    #     images.delete()
+    for i, class_name in enumerate(class_names):
+        label, created = models.Label.objects.get_or_create(name=class_name, index=i, dataset=dataset)
+
+    # Thêm các ảnh vào cơ sở dữ liệu với nhãn từ 0 đến 9
+    for class_name in class_names:
+        class_dir = os.path.join(folder_dataset, class_name)
+        label = models.Label.objects.get(name=class_name)
+
+        image_files = os.listdir(class_dir)
+        for image_file in image_files:
+            # Thêm tên ảnh vào cơ sở dữ liệu
+            # image_name = os.path.splitext(image_file)[0]
+            models.Image.objects.create(name=image_file, label=label)
+
+    return JsonResponse({'message': 'Files uploaded successfully'})

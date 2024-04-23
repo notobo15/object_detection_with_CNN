@@ -1,0 +1,17 @@
+{
+  "files.autoSave": "off",
+  "terminal.integrated.defaultProfile.windows": "Ubuntu-22.04 (WSL)",
+  "[django-html]": {
+    "editor.defaultFormatter": "HookyQR.beautify",
+    "editor.quickSuggestions": {
+      "comments": true,
+      "other": true,
+      "strings": true
+    },
+    "editor.tabSize": 4,
+    "editor.wordWrap": "on"
+  },
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
+}

@@ -1,2 +1,54 @@
-<h1>getting</h1>
-<a href="{% url 'train' %}">train</a>
+
+{% load static %}
+{% include 'inc/link.html' %}
+{% include 'inc/script.html' %}
+
+{% include 'components/loading.html' %}
+<div class="container min-vh-100 py-5">
+  <div class="row align-items-center">
+    <div class="col-md-6">
+      <h1 style="color: #1A73E8;
+      line-height: 1em;font-size: 64px;" class="font-weight-bold">Insightful Detection</h1>
+      <h2 class="font-weight-bold my-4" style="max-width: 500px;">Train a computer to recognize your own images.</h2>
+      <p class="font-weight-bold my-4">A fast, easy way to create machine learning models for your sites, apps, and more – no expertise or coding required.</p>
+      <a class="btn btn-primary my-4 font-weight-bold" style="
+      color: #fff;
+      border-radius: 8px;
+      font-size: 20px;
+      padding: 18px 50px 16px;" href="{% url 'train' %}">Get Started</a>
+      <div class="d-flex justify-content-start align-content-center" style="font-size: 32px">
+        <a href="" class="p-3 btn-link">
+          <i class="devicon-tensorflow-original colored"></i>
+        </a>
+        <a href="" class="p-3 btn-link">
+          <i class="devicon-django-plain colored"></i>
+        </a>
+        <a href="" class="p-3 btn-link">
+          <i class="devicon-python-plain colored"></i>
+        </a>
+        <a href="" class="p-3 btn-link">
+          <i class="devicon-keras-plain colored"></i>
+        </a>
+        <a href="" class="p-3 btn-link">
+          <i class="devicon-opencv-plain-wordmark"></i>
+        </a>
+        <a href="" class="p-3 btn-link">
+          <i class="devicon-linux-plain colored"></i>
+        </a>
+        <a href="" class="p-3 btn-link">
+          <i class="devicon-anaconda-original colored"></i>
+        </a>
+      
+      </div>
+    </div>
+    <div class="col-md-6">
+      <video src="{% static 'images/prediction.mp4' %}" loop autoplay muted playsinline type="video/mp4" style="width: 100%"></video>
+    </div>
+  </div>
+</div>
+<script>
+   loadingEle.show();
+    $(document).ready(function() {
+      loadingEle.hide();
+    })
+</script>

@@ -16,8 +16,10 @@ import mimetypes
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576 * 100
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -40,18 +42,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ORIGIN_ALLOW_ALL = True 
 
+CORS_ORIGIN_WHITELIST = [
+# 'http://localhost:8000',
+'http://127.0.0.1:8000'
+]
 ROOT_URLCONF = 'server.urls'
 
 TEMPLATES = [
@@ -148,7 +157,7 @@ LOGGING = {
     }
 }
 CSRF_TRUSTED_ORIGINS = [
-"http://localhost:8000",
+# "http://localhost:8000",
 "http://*.127.0.0.1",
 "http://127.0.0.1:8000",
 "http://192.168.1.40:8000",

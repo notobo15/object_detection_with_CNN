@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
 <div class="container my-3">
   <div class="jumbotron jumbotron-fluid bg-light">
     <div class="container">
@@ -9,12 +11,13 @@
       </p>
     </div>
   </div>
+  {% comment %} https://picsum.photos/600/300 {% endcomment %}
   <div class="row">
     {% for dataset in datasets %}
-    <div class="col-md-4 mb-4">
-      <a class="card text-black text-decoration-none p-2 bg-light border rounded h-100"
+    <div class="col-md-4 mb-4 card-animation">
+      <a class="card text-dark text-decoration-none p-2 bg-light border rounded h-100"
         href="{% url 'standardTrainingDetail' slug=dataset.slug|urlencode %}">
-        <img src="https://picsum.photos/600/300" class="card-img-top" />
+        <img src="{% static 'images/' %}{{dataset.img}}" class="card-img-top" />
         <div class="card-body">
           <h2 class="">{{ dataset.name }}</h2>
           <p class="card-text">{{ dataset.description }}</p>

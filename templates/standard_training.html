@@ -9,9 +9,9 @@
     <!-- Modal -->
     {% include 'components/modal.html'%}
   </div>
-  <h1 class="my-4">Standard Training</h1>
+  <h1 class="my-4 font-weight-bold text-primary">Standard Training</h1>
   <div class="alert alert-primary" role="alert">
-    A simple primary alert—check it out!
+    {{dataset.description}}
   </div>
   <style>
     .no-arrow::after {
@@ -19,11 +19,11 @@
     }
   </style>
   <div class="row">
-    <div class="col-sm-7 pr-sm-2">
+    <div class="col-sm-7 col-lg-8 pr-sm-2">
       <div class="p-3 border shadow mb-3" style="border-radius: 10px">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h4 class="text-center">Training</h4>
-          <button class="btn" style="outline: none" data-toggle="modal" data-target="#exampleModalCenter">
+          <button class="btn" data-toggle="modal" data-target="#exampleModalCenter">
             <i class="fas fa-cog"></i>
           </button>
         </div>
@@ -31,12 +31,31 @@
           Train Model
         </button>
       </div>
-
+      <div class="p-3 border shadow mb-3" style="border-radius: 10px">
+        <h5> <label for="size_image">Total images for train model</label></h5>
+        <select class="form-control" id="size_image">
+          <option selected value="10">10</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="200">200</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+        <script>
+          let searchParams = new URLSearchParams(window.location.search)
+          $(`select option[value="${searchParams.get('sizes')}"]`).attr("selected",true);
+          $("#size_image").change(function() {
+            let sizes = $(this).val()
+            let url = $(location).attr('pathname') + "?sizes=" + sizes;
+            window.location.assign(url)
+          })
+        </script>
+      </div>
       {% for label, images in images_by_labels %}
-      <div class="border mb-3 shadow bg-light" style="border-radius: 10px">
+      <div class="border mb-3 shadow bg-white class_item" style="border-radius: 10px">
         <div class="px-3 pt-3 pb-2 border-bottom d-flex justify-content-between align-content-center">
           <h5>{{ label.name }}</h5>
-          <div class="dropdown">
+         <!-- <div class="dropdown">
             <span type="button" class="no-arrow dropdown-toggle px-2" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
               <i class="fas fa-ellipsis-v"></i>
@@ -48,6 +67,7 @@
               <a class="dropdown-item" href="#">Download Samples</a>
             </div>
           </div>
+        --> 
         </div>
 
         <div>
@@ -61,39 +81,39 @@
               <i class="fas fa-upload" style="font-size: 20px"></i>
               <span>Upload</span>
             </button>
-            <ol class="p-0 m-0" style="
-                list-style: none;
+            <div class="images-container w-100" style="
                 white-space: nowrap;
                 overflow-x: auto;
                 min-height: 70px;
               ">
               {% for image in images %}
-              <li style="
+                <a href="{% static 'datasets' %}/{{dataset.slug}}/{{ label.name }}/{{ image.name }}" data-fancybox
+                  data-caption="{{ label.name }}" class="image-link" style="
                   width: 58px;
                   height: 58px;
                   margin-right: 5px;
                   display: inline-block;
                   border-radius: 6px;
+                  position: relative;
                 ">
-                <a href="{% static 'datasets/cifar10/' %}{{ label.name }}/{{ image.name }}" data-fancybox
-                  data-caption="{{ label.name }}">
-                  <img src="{% static 'datasets/cifar10/' %}{{ label.name }}/{{ image.name }}"
-                    style="width: 100%; border-radius: 4px" class="border" loading="lazy" />
+                  <img src="{% static 'datasets' %}/{{dataset.slug}}/{{ label.name }}/{{ image.name }}"
+                    style="width: 100%; border-radius: 4px;height: 58px;" class="border" loading="lazy" />
+                  <button class="delete-btn" ><i class="fas fa-trash-alt text-white"></i></button>
                 </a>
-              </li>
               {% endfor %}
-            </ol>
+              <input type="file" id="file-input" accept="image/*" multiple style="display: none;">
+            </div>
           </div>
         </div>
       </div>
 
       {% endfor %}
     </div>
-    <div class="col-sm-5 pl-sm-2">
+    <div class="col-sm-5 col-lg-4 pl-sm-2">
       <div class="bg-light rounded border p-3">
         <h4>Preview</h4>
         <hr />
-        <div class="d-flex align-items-center justify-content-between">
+        {% comment %} <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center justify-content-start">
             <h6 class="mr-3 mb-0">INPUT</h6>
 
@@ -112,7 +132,7 @@
               <option value="webcam">Webcam</option>
             </select>
           </div>
-        </div>
+        </div> {% endcomment %}
         <form id="form_predict" enctype="multipart/form-data">
           <div class="">
             <input id="upload_img" name="image" type="file" hidden />
@@ -125,7 +145,9 @@
           </div>
 
           <div class="border">
-            <img id="imagePreview" style="width: 100%" src="{% static 'images/image_placeholder.png'%}" alt="" />
+            <label class="d-block" for="upload_img">
+              <img id="imagePreview" style="width: 100%" src="{% static 'images/image_placeholder.png'%}" alt="" />
+          </label>
           </div>
         </form>
         <div>
@@ -137,9 +159,9 @@
           <h5 class="">OUTPUT:</h5>
           <div id="output">
             {% for label,image in images_by_labels %}
-            <div class="d-flex justify-content-between align-items-center">
-              <h6 class="mb-0" style="width: 30%">{{label.name }}</h6>
-              <div class="progress mb-3" style="width: 70%; height: 29px; border-radius: 6px">
+            <div class="d-flex justify-content-between align-items-center mb-3 ">
+              <h6 class="mb-0 mr-3" style="width: 30%">{{label.name }}</h6>
+              <div class="progress" style="width: 70%; height: 29px; border-radius: 6px">
                 <div class="progress-bar" role="progressbar" style="width: 0%; color: #000;" aria-valuenow="0"
                   aria-valuemin="0" aria-valuemax="100">
                   0%
@@ -155,194 +177,9 @@
   </div>
 </div>
 <script>
-  $(document).ready(function () {
-    console.log($("#setting_train"))
-    $("#setting_train").submit(function (e) {
-      e.preventDefault()
-      let formData = new FormData($("#setting_train")[0]);
-      console.log(formData)
-    })
+//  var LIST = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck'];
+var LIST  =  {{ labels|safe}}
 
-    changeColorProcessBar();
-
-
-    $("#btn_predict").click(function () {
-      // var formData = new FormData($("#form_predict")[0]);
-      var formData = new FormData();
-      formData.append('image', $('input[type=file]')[0].files[0]);
-      formData.append('dataset', 'cifar-10');
-      console.log(formData)
-      var csrftoken = getCookie('csrftoken');
-
-      $.ajaxSetup({
-        headers: {
-          'X-CSRFToken': csrftoken
-        }
-      });
-      $.ajax({
-
-        url: "/predict",
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          // Handle success response
-          console.log(response);
-
-          let html = ``
-          response.forEach((item, index) => {
-
-            html += `
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                          <h6 class="mb-0" style="width: 30%">${item.name}</h6>
-                          <div class="progress" style="width: 70%; height: 29px; border-radius: 6px">
-                              <div class="progress-bar" role="progressbar" style="width: ${item.accuracy * 100}%; color: #000;" aria-valuenow="${item.accuracy * 100}" aria-valuemin="0" aria-valuemax="100">
-                                  ${Math.round(item.accuracy * 100)}%
-                              </div>
-                          </div>
-                      </div>
-                  `
-          })
-          $("#output").empty();
-          $("#output").html(html)
-          changeColorProcessBar();
-        },
-        error: function (xhr, status, error) {
-          // Handle error
-          console.log(error)
-          // ShowToast(jQuery.parseJSON(xhr.responseText)?.image[0])
-        }
-      });
-    });
-
-    function getCookie(name) {
-      var cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-          var cookie = jQuery.trim(cookies[i]);
-          // Check if the cookie name matches the CSRF token cookie name
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
-    }
-
-    // $("select").select2({
-    //   width: "resolve",
-    // });
-
-    Fancybox.bind("[data-fancybox]", {
-      groupAll: true,
-      buttons: ["zoom", "slideShow", "fullScreen", "thumbs", "close"],
-      loop: true,
-      protect: true,
-    });
-
-    $("#customSwitch").change(function () {
-      let label_ele = $("#customSwitch").siblings("label");
-      console.log();
-      if (label_ele.text().trim() == "ON") {
-        label_ele.text("OFF");
-      } else {
-        label_ele.text("ON");
-      }
-    });
-
-    $('#upload_img').change(function () {
-      const file = this.files[0];
-      console.log(file)
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          $('#imagePreview').attr('src', e.target.result);
-        }
-        reader.readAsDataURL(file);
-      } else {
-        $('#imagePreview').attr('src', '');
-      }
-    });
-    function fetchData() {
-      fetch('http://127.0.0.1:8000/predict')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          // Handle the JSON data returned from the endpoint
-          console.log(data);
-          // Do something with the data
-        })
-        .catch(error => {
-          // Handle errors
-          console.error('There was a problem with the fetch operation:', error);
-        });
-    }
-
-  
-
-    function ShowToast(text = "This is Toast") {
-      Toastify({
-        text: text,
-        duration: 3000,
-        newWindow: true,
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
-          color: "#fff" // Màu chữ
-        },
-        onClick: function () { } // Callback sau khi click
-      }).showToast();
-    }
-
-
-    function startTraining() {
-      fetch('/train-model', {
-        method: 'POST'
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data.message);
-          // Hiển thị biểu tượng loading và bắt đầu gửi yêu cầu cập nhật tiến trình
-          updateTrainingProgress();
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          // Xử lý lỗi nếu cần
-        });
-    }
-    $(".btn_train_model").click(function () {
-      console.log(12123)
-      startTraining()
-    })
-    function updateTrainingProgress() {
-      fetch('url_to_your_training_progress_api')
-        .then(response => response.json())
-        .then(data => {
-          if (data.epoch) {
-            // Hiển thị thông tin tiến trình (ví dụ: số epoch đã hoàn thành)
-            console.log(`Epoch ${data.epoch}/${data.total_epochs}`);
-            // Tiếp tục gọi cập nhật tiến trình
-            setTimeout(updateTrainingProgress, 1000); // Gọi lại sau 1 giây
-          } else if (data.message) {
-            // Hiển thị thông báo khi huấn luyện hoàn tất
-            console.log(data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          // Xử lý lỗi nếu cần
-        });
-    }
-  });
 </script>
+<script src="{% static 'js/standard.js' %}"></script>
 {% endblock %}
