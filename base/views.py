@@ -364,7 +364,7 @@ def train_model2(request):
 
         # folder = os.path.join(PROJECT_PATH, 'static', 'uploads', '653da5c0-8b41-47ba-ae52-90095c7190bc')
         # setting = Setting(padding=0, epochs=10, patch_sizes=32, stride=0, optimizer='adam', loss='categorical_crossentropy', activation='softmax',max_pooling=2, test_size=0.2, num_classes=num_classes)
-        flower_classifier = Training(epochs=epochs, patch_sizes=patch_sizes,test_size=test_size, optimizer=optimizer,num_classes=num_classes,folder_path = new_folder_path)
+        flower_classifier = Training(size=112, epochs=epochs, patch_sizes=patch_sizes,test_size=test_size, optimizer=optimizer,num_classes=num_classes,folder_path = new_folder_path)
 
         # flower_classifier = Training(num_classes)
         flower_classifier.build_model()
@@ -395,14 +395,16 @@ def train_model2(request):
 
 
 def migarate_data(request):
-    PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
-    folder_dataset = os.path.join(PROJECT_PATH, 'static', 'datasets', 'fashion_mnist')
+    PROJECT_PATH = os.path.abspath(os.path.dirname(__name__)) 
+    name_dataset = 'flowers'
+    folder_dataset = os.path.join(PROJECT_PATH, 'static', 'datasets', name_dataset)
 
     # class_names = os.listdir(folder_dataset)
     # class_names = ['0','1','2','3','4', '5', '6', '7', '8', '9']
-    dataset = models.Dataset.objects.get(slug='fashion-mnist')
-    class_names = ['Tshirt', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag',
-                   'Ankle boot']
+    dataset = models.Dataset.objects.get(slug=name_dataset)
+    # class_names = ['Tshirt', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag',
+    #                'Ankle boot']
+    class_names =  ['daisy', 'dandelion', 'roses', 'sunflowers', 'tulips']
     # for class_name in class_names:
     #     # Lấy đối tượng nhãn dựa trên tên lớp
     #     label = models.Label.objects.get(name=class_name)
@@ -412,18 +414,29 @@ def migarate_data(request):
     #
     #     # Xóa tất cả các hình ảnh
     #     images.delete()
-    for i, class_name in enumerate(class_names):
-        label, created = models.Label.objects.get_or_create(name=class_name, index=i, dataset=dataset)
+    # for i, class_name in enumerate(class_names):
+    #     label, created = models.Label.objects.get_or_create(name=class_name, index=i, dataset=dataset)
 
     # Thêm các ảnh vào cơ sở dữ liệu với nhãn từ 0 đến 9
     for class_name in class_names:
         class_dir = os.path.join(folder_dataset, class_name)
         label = models.Label.objects.get(name=class_name)
-
         image_files = os.listdir(class_dir)
-        for image_file in image_files:
+        # for image_file in image_files:
             # Thêm tên ảnh vào cơ sở dữ liệu
             # image_name = os.path.splitext(image_file)[0]
-            models.Image.objects.create(name=image_file, label=label)
+            # print(image_file)
+            # models.Image.objects.create(name=image_file, label=label)
+            # if image_file.endswith('.png'):
+            #     # Tạo tên mới bằng cách thay đổi phần mở rộng từ .png thành .jpg
+            #     new_image_file = os.path.splitext(image_file)[0] + '.jpg'
+                
+            #     # Đường dẫn đến tệp ảnh cũ và mới
+            #     old_path = os.path.join(class_dir, image_file)
+            #     new_path = os.path.join(class_dir, new_image_file)
+            #     # print('old: ' +old_path + ' new: ' + new_path )
+            #     # Đổi tên tệp ảnh
+            #     os.rename(old_path, new_path)
+
 
     return JsonResponse({'message': 'Files uploaded successfully'})

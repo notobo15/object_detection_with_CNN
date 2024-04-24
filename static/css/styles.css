@@ -23,7 +23,7 @@
 }
 .sample-source-btn {
   text-align: center;
-  background-color: #e8f0fe;
+  /* background-color: #e8f0fe; */
   color: #1967d2;
   border: 2px solid transparent;
   border-radius: 4px;
@@ -154,7 +154,10 @@
 .btn_guide:hover .btn_guide_detail {
   display: block;
 }
-
+.btn_modal_setting {
+  outline: none; 
+  font-size: 1.4rem !important;
+}
 .btn_modal_setting i.fas.fa-cog {
   transition: transform 0.3s ease;
 }
@@ -165,4 +168,9 @@
 .btn_add_a_class:hover {
   border-color: #007bff !important;
   color: #007bff !important;
+}
+.label_class_name {
+  font-size: 22px;
+  outline: none;
+  font-weight: bold;
 }

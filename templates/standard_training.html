@@ -1,17 +1,18 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
+{% include 'components/modal2.html'%}
+
 <div class="container min-vh-100">
   <div class="d-flex justify-content-end mt-3">
-    <!-- <button class="btn btn-outline-danger d-flex align-items-center" data-toggle="modal"
-      data-target="#exampleModalCenter">
-      Settings
-      <span class="ml-2" style="font-size: 20px"><i class="fas fa-cog"></i></span>
-    </button> -->
-    <!-- Modal -->
-    {% include 'components/modal.html'%}
   </div>
   <h1 class="my-4 font-weight-bold text-primary">Standard Training</h1>
   <div class="alert alert-primary" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
     {{dataset.description}}
+    
   </div>
   <style>
     .no-arrow::after {
@@ -23,38 +24,33 @@
       <div class="p-3 border shadow mb-3" style="border-radius: 10px">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h4 class="text-center">Training</h4>
-          <button class="btn" data-toggle="modal" data-target="#exampleModalCenter">
+          <div class="d-flex justify-content-between">
+            <select class="form-control mr-3" id="size_image">
+              <option selected value="10">
+                --Select Total Images--
+              </option>
+              <option value="10">10</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+            </select>
+            </label>
+          <button class="btn btn_modal_setting" data-toggle="modal" data-target="#modal_setting">
             <i class="fas fa-cog"></i>
           </button>
+            
+          </div>
         </div>
         <button class="btn btn-light border w-100 py-2 btn_train_model" style="font-size: 1.3rem; font-weight: 500">
           Train Model
         </button>
       </div>
-      <div class="p-3 border shadow mb-3" style="border-radius: 10px">
-        <h5> <label for="size_image">Total images for train model</label></h5>
-        <select class="form-control" id="size_image">
-          <option selected value="10">10</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-          <option value="200">200</option>
-          <option value="500">500</option>
-          <option value="1000">1000</option>
-        </select>
-        <script>
-          let searchParams = new URLSearchParams(window.location.search)
-          $(`select option[value="${searchParams.get('sizes')}"]`).attr("selected",true);
-          $("#size_image").change(function() {
-            let sizes = $(this).val()
-            let url = $(location).attr('pathname') + "?sizes=" + sizes;
-            window.location.assign(url)
-          })
-        </script>
-      </div>
       {% for label, images in images_by_labels %}
-      <div class="border mb-3 shadow bg-white class_item" style="border-radius: 10px">
+      <div class="border mb-3 shadow bg-white image_item" style="border-radius: 10px">
         <div class="px-3 pt-3 pb-2 border-bottom d-flex justify-content-between align-content-center">
-          <h5>{{ label.name }}</h5>
+          <input type="text" value="{{ label.name }}" class="border-0 label_class_name" readonly />
          <!-- <div class="dropdown">
             <span type="button" class="no-arrow dropdown-toggle px-2" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
@@ -76,7 +72,7 @@
           <div class="d-flex align-items-center p-3">
             <button
               type="button"
-              class=" sample-source-btn btn p-2 d-flex flex-column justify-content-between align-items-center align-self-start gap-1 mr-2"
+              class=" sample-source-btn btn btn-outline-primary p-2 d-flex flex-column justify-content-between align-items-center align-self-start gap-1 mr-2"
             >
               <i class="fas fa-upload" style="font-size: 20px"></i>
               <span>Upload</span>
@@ -156,16 +152,17 @@
           </button>
         </div>
         <div>
-          <h5 class="">OUTPUT:</h5>
+          <h5 class="text-center mb-3 font-weight-bold">OUTPUT</h5>
+          <hr />
           <div id="output">
             {% for label,image in images_by_labels %}
             <div class="d-flex justify-content-between align-items-center mb-3 ">
               <h6 class="mb-0 mr-3" style="width: 30%">{{label.name }}</h6>
               <div class="progress" style="width: 70%; height: 29px; border-radius: 6px">
-                <div class="progress-bar" role="progressbar" style="width: 0%; color: #000;" aria-valuenow="0"
+                {% comment %} <div class="progress-bar" role="progressbar" style="width: 0%; color: #fff;" aria-valuenow="0"
                   aria-valuemin="0" aria-valuemax="100">
                   0%
-                </div>
+                </div> {% endcomment %}
               </div>
             </div>
             {% endfor %}

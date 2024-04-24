@@ -1,26 +1,29 @@
 
 $(document).ready(function () {
+  let searchParams = new URLSearchParams(window.location.search)
+  $(`select option[value="${searchParams.get('sizes')}"]`).attr("selected", true);
+  $("#size_image").change(function () {
+    let sizes = $(this).val()
+    let url = $(location).attr('pathname') + "?sizes=" + sizes;
+    window.location.assign(url)
+  })
   changeColorProcessBar();
-  console.log(LIST)
   $("#btn_predict").click(async function () {
+    if (!isUploaded) {
+      ShowToast("Please, choose images from your files")
+      return
+    }
+    if (!checkTrained()) {
+      ShowToast("Please, train the model before making predictions")
+      return
+    }
     await loadingEle.show();
 
     var uuid = localStorage.getItem("uuid")
     model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
     // 1. Chuyen anh ve tensor
     let image = $('#imagePreview')[0];
-    let img = tf.browser.fromPixels(image);
-    let normalizationOffset = tf.scalar(255);
-    let tensor = await img
-      .resizeNearestNeighbor([112, 112])
-      .toFloat()
-      .sub(normalizationOffset)
-      .div(normalizationOffset)
-      .reverse(2)
-      .expandDims();
-    /*
-    
-    */
+    let tensor = await convertImageToTensor(image)
     // 2. Predict
     let predictions = await model.predict(tensor);
     predictions = predictions.dataSync();
@@ -28,25 +31,31 @@ $(document).ready(function () {
     let sum = 0;
     let maxPerIndex = 0
     let maxPer = 0
-    console.log(LIST)
     let result = await Array.from(predictions)
       .map(function (p, i) {
         let per = (p * 100).toFixed(1)
+        console.log("per" + per)
         if (maxPer < per) {
           maxPer = per
-          maxPerIndex = i
+          maxPerIndex = +i
         }
-        sum += per
+        sum += +per
         return {
-          probability: per,
+          probability: parseFloat(per).toFixed(1),
           className: LIST[i]
         };
       });
+
+    console.log(result)
     if (sum < 100) {
-      result[maxPerIndex].probability += 0.1
+      result[maxPerIndex].probability = +result[maxPerIndex].probability + 0.1;
+      result[maxPerIndex].probability = result[maxPerIndex].probability.toFixed(1)
+
     } else if (sum > 100) {
-      result[maxPerIndex].probability -= 0.1
+      result[maxPerIndex].probability = +result[maxPerIndex].probability - 0.1;
+      result[maxPerIndex].probability = result[maxPerIndex].probability.toFixed(1)
     }
+
     // .sort(function (a, b) {
     //   return b.probability - a.probability;
     // });
@@ -58,7 +67,7 @@ $(document).ready(function () {
       <div class="d-flex justify-content-between align-items-center mb-3">
       <h6 class="mb-0 mr-3" style="width: 30%">${item.className}</h6>
       <div class="progress" style="width:70%; height: 29px; border-radius: 6px">
-        <div class="progress-bar" role="progressbar" style="width: ${item.probability}%; color: #000;" aria-valuenow="${item.probability}" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" role="progressbar" style="width: ${item.probability}%; color: ${item.probability > 15 ? `#fff` : `#000`};" aria-valuenow="${item.probability}" aria-valuemin="0" aria-valuemax="100">
           ${item.probability}%
         </div>
       </div>
@@ -71,55 +80,6 @@ $(document).ready(function () {
 
   });
 
-  $("#btn_predictt").click(function () {
-    // var formData = new FormData($("#form_predict")[0]);
-    var formData = new FormData();
-    formData.append('image', $('input[type=file]')[0].files[0]);
-    formData.append('dataset', 'cifar-10');
-    console.log(formData)
-    var csrftoken = getCookie('csrftoken');
-
-    $.ajaxSetup({
-      headers: {
-        'X-CSRFToken': csrftoken
-      }
-    });
-    $.ajax({
-
-      url: "/predict",
-      type: "POST",
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Handle success response
-        console.log(response);
-
-        let html = ``
-        response.forEach((item, index) => {
-
-          html += `
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="mb-0" style="width: 30%">${item.name}</h6>
-                        <div class="progress" style="width: 70%; height: 29px; border-radius: 6px">
-                            <div class="progress-bar" role="progressbar" style="width: ${item.accuracy * 100}%; color: #000;" aria-valuenow="${item.accuracy * 100}" aria-valuemin="0" aria-valuemax="100">
-                                ${Math.round(item.accuracy * 100)}%
-                            </div>
-                        </div>
-                    </div>
-                `
-        })
-        $("#output").empty();
-        $("#output").html(html)
-        changeColorProcessBar();
-      },
-      error: function (xhr, status, error) {
-        // Handle error
-        console.log(error)
-        // ShowToast(jQuery.parseJSON(xhr.responseText)?.image[0])
-      }
-    });
-  });
   // $("select").select2({
   //   width: "resolve",
   // });
@@ -131,57 +91,38 @@ $(document).ready(function () {
     protect: true,
   });
 
-  $("#customSwitch").change(function () {
-    let label_ele = $("#customSwitch").siblings("label");
-    console.log();
-    if (label_ele.text().trim() == "ON") {
-      label_ele.text("OFF");
-    } else {
-      label_ele.text("ON");
-    }
-  });
-
-
-  function ShowToast(text = "This is Toast") {
-    Toastify({
-      text: text,
-      duration: 3000,
-      newWindow: true,
-      close: true,
-      gravity: "top", // `top` or `bottom`
-      position: "right", // `left`, `center` or `right`
-      stopOnFocus: true, // Prevents dismissing of toast on hover
-      style: {
-        background: "linear-gradient(to right, #00b09b, #96c93d)",
-        color: "#fff" // Màu chữ
-      },
-      onClick: function () { } // Callback sau khi click
-    }).showToast();
-  }
-
+  // $("#customSwitch").change(function () {
+  //   let label_ele = $("#customSwitch").siblings("label");
+  //   console.log();
+  //   if (label_ele.text().trim() == "ON") {
+  //     label_ele.text("OFF");
+  //   } else {
+  //     label_ele.text("ON");
+  //   }
+  // });
 });
 
-function getImageData() {
-  let imageData = [];
-  $('.class_item').each(function () {
-    var label = $(this).find('h5').text().trim();
-    var images = [];
+// function getImageData() {
+//   let imageData = [];
+//   $('.class_item').each(function () {
+//     var label = $(this).find('h5').text().trim();
+//     var images = [];
 
-    $(this).find('.images-container img').each(function () {
-      var imageUrl = $(this).attr('src');
-      images.push(imageUrl);
-    });
+//     $(this).find('.images-container img').each(function () {
+//       var imageUrl = $(this).attr('src');
+//       images.push(imageUrl);
+//     });
 
-    var imageDataItem = {
-      label: label,
-      images: images
-    };
+//     var imageDataItem = {
+//       label: label,
+//       images: images
+//     };
 
-    imageData.push(imageDataItem);
-  });
+//     imageData.push(imageDataItem);
+//   });
 
-  return imageData;
-}
+//   return imageData;
+// }
 
 $(".btn_train_model").click(function () {
   loadingEle.show();
@@ -202,10 +143,11 @@ $(".btn_train_model").click(function () {
       var uuid = data.uuid
       model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
       console.log('Load model');
-      //        console.log(model.summary());
       console.log(data); // In ra kết quả từ server
+      saveUuid(data?.uuid)
     })
     .catch(error => {
       console.error('Error:', error);
     });
 })
+

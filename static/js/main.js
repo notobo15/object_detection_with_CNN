@@ -14,32 +14,56 @@ function hexToRgb(hex) {
   var b = parseInt(hex.substring(4, 6), 16);
   return `${r}, ${g}, ${b}`;
 }
-
+function ShowToast(message = "This is a toast", title = "Data Error", type = "error") {
+  toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": true,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": true,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  }
+  toastr[type](message, title);
+}
 function delete_image(event) {
   let containeraImagesEle = $(event).parent().parent()
   let childrenEle = $(containeraImagesEle).children("div")
   $(containeraImagesEle).siblings(".open-samples-label").text(`${childrenEle.length} Image Samples`)
-
   $(event).parent().remove()
 }
 $('.images-container').on('click', '.delete-btn', function (event) {
   event.preventDefault();
   event.stopPropagation();
+  let container = $(this).parent().parent()
 
-  // Xóa hình ảnh
   $(this).closest('.image-link').remove();
+
+
+  // console.log($(container).find(".image-link"))
+  $(container).parent().siblings("h6").text(`${$(container).find(".image-link").length} Images Samples`)
+  // Xóa hình ảnh
 });
 
 $('.sample-source-btn').click(function () {
-  // Kích hoạt sự kiện click cho input type file ẩn
   $('#file-input').click();
 });
 
-var isUploaded = false;
 
 $('#file-input').change(function () {
+  let containerEle = $(this).parent().parent()
+  let labelEle = $(containerEle).siblings("h6")
+  let totalImageCurrent = $(containerEle).find("img").length
+
   var files = this.files;
-  isUploaded = true
   for (var i = 0; i < files.length; i++) {
     var file = files[i];
     var reader = new FileReader();
@@ -68,6 +92,7 @@ $('#file-input').change(function () {
         class: 'delete-btn',
         click: function () {
           $(this).closest('.image-link').remove();
+
         }
       }).append($('<i>', {
         class: 'fas fa-trash-alt text-white'
@@ -76,120 +101,13 @@ $('#file-input').change(function () {
       // Thêm thẻ img và nút xóa vào thẻ a
       newImageLink.append(newImage);
       newImageLink.append(deleteButton);
-
       $('.images-container').append(newImageLink);
+
+      labelEle.text(`${+totalImageCurrent + files.length} Images Samples`)
+
     };
   }
 });
-// function getImageData() {
-//   var imageData = [];
-
-//   // Lặp qua từng phần tử được tạo ra từ vòng lặp Django
-//   $('.border.mb-3.shadow.bg-light').each(function () {
-//     var label = $(this).find('h5').text().trim(); // Lấy thông tin nhãn từ thẻ h5
-//     var images = [];
-
-//     // Lặp qua từng hình ảnh trong phần tử images-container
-//     $(this).find('.images-container .image-link').each(function () {
-//       var imageUrl = $(this).attr('href'); // Lấy đường dẫn hình ảnh
-//       images.push(imageUrl); // Thêm đường dẫn hình ảnh vào mảng images
-//     });
-
-//     // Tạo đối tượng JSON chứa thông tin nhãn và hình ảnh
-//     var imageDataItem = {
-//       label: label,
-//       images: images
-//     };
-
-//     // Thêm đối tượng vào mảng imageData
-//     imageData.push(imageDataItem);
-//   });
-
-//   return imageData;
-// }
-
-// $(".btn_train_model").click(function () {
-//   loadingEle.show();
-//   let trainingData = { 'trainingData': getImageData(), 'setting': JSON.parse(localStorage.getItem("setting")) }
-//   console.log(trainingData)
-//   fetch('/train-model2', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(trainingData)
-//   })
-//     .then(response => {
-//       loadingEle.hide();
-//       return response.json();
-//     })
-//     .then(async data => {
-//       var uuid = data.uuid
-//       model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
-//       console.log('Load model');
-//       //        console.log(model.summary());
-//       console.log(data); // In ra kết quả từ server
-//     })
-//     .catch(error => {
-//       console.error('Error:', error);
-//     });
-// })
-// var LIST = [
-//   'airplane', 'automobile', 'bird', 'cat', 'deer',
-//   'dog', 'frog', 'horse', 'ship', 'truck'
-// ];
-// var LIST = [
-//   '0', '1', '2', '3', '4',
-//   '5', '6', '7', '8', '9'
-// ];
-
-// $("#btn_predict").click(async function () {
-//   await loadingEle.show();
-
-//   var uuid = localStorage.getItem("uuid")
-//   model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
-//   // 1. Chuyen anh ve tensor
-//   let image = $('#imagePreview')[0];
-//   let img = tf.browser.fromPixels(image);
-//   let normalizationOffset = tf.scalar(255); // 127.5
-//   let tensor = await img
-//     .resizeNearestNeighbor([28, 28])
-//     .toFloat()
-//     .sub(normalizationOffset)
-//     .div(normalizationOffset)
-//     .reverse(2)
-//     .expandDims();
-//   // 2. Predict
-//   let predictions = await model.predict(tensor);
-//   predictions = predictions.dataSync();
-//   let result = await Array.from(predictions)
-//     .map(function (p, i) {
-//       return {
-//         probability: (p * 100).toFixed(1),
-//         className: LIST[i]
-//       };
-//     })
-//   // .sort(function (a, b) {
-//   //   return b.probability - a.probability;
-//   // });
-//   console.log(result);
-//   await loadingEle.hide();
-//   let html = ``
-//   result.forEach((item) => {
-//     html += `
-//         <div class="d-flex justify-content-between align-items-center">
-//         <h6 class="mb-0" style="width: 30%">${item.className}</h6>
-//         <div class="progress mb-3" style="width:70%; height: 29px; border-radius: 6px">
-//           <div class="progress-bar" role="progressbar" style="width: ${item.probability}%; color: #000;" aria-valuenow="${item.probability}" aria-valuemin="0" aria-valuemax="100">
-//             ${item.probability}%
-//           </div>
-//         </div>
-//       </div>
-//         `
-//   })
-//   $("#output").html(html)
-//   changeColorProcessBar()
-// });
 
 $('#upload_img').change(function () {
   const file = this.files[0];
@@ -203,3 +121,93 @@ $('#upload_img').change(function () {
     reader.readAsDataURL(file);
   }
 });
+
+function checkClassNotEmptyImages() {
+  let total_image_list = []
+  $(".image_item").each(function (index, item) {
+    let total_image = $(item).find("img").length
+    total_image_list.push(total_image)
+  })
+  if (total_image_list.length === 0) return `Cannot train model without data. Click "add a class" below.`
+  for (let index = 0; index < total_image_list.length; index++) {
+    let item = total_image_list[index];
+    if (item === 0) {
+      let class_name = $($($('.image_item')[index]).find('input')[0]).val();
+      return `"${class_name}" requires at least 1 image. Click "Upload" below to begin.`;
+    }
+  }
+  return true
+}
+function checkTrained() {
+  return localStorage.getItem("uuid") ? true : false
+}
+function delete_class(e) {
+  let container = $(e.srcElement).parent().parent().parent().parent()
+  // console.log(container)
+  container.remove()
+}
+
+var loadingEle = $('#loadingSpinner')
+
+async function convertImageToTensor(image) {
+
+  let img = tf.browser.fromPixels(image);
+  let normalizationOffset = tf.scalar(255); // 127.5
+  let tensor = await img
+    .resizeNearestNeighbor([112, 112])
+    .toFloat()
+    .sub(normalizationOffset)
+    .div(normalizationOffset)
+    .reverse(2)
+    .expandDims();
+  return tensor
+}
+async function predict(model, tensor) {
+  let predictions = await model.predict(tensor);
+  predictions = predictions.dataSync();
+  return predictions
+}
+
+async function loadModel(uuid) {
+  model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
+  console.log('Load model done')
+  // console.log(model.summary());
+  return model;
+}
+
+function clear() {
+  localStorage.removeItem("uuid")
+}
+function getUuid() {
+  return localStorage.getItem("uuid");
+}
+function saveUuid(uuid) {
+  localStorage.setItem("uuid", uuid);
+}
+var isUploaded = false
+function getImageData() {
+  var imageData = [];
+
+  // Lặp qua từng phần tử được tạo ra từ vòng lặp Django
+  $('.image_item').each(function () {
+    var label = $(this).find('input')?.val()?.trim();
+    var images = [];
+
+    // Lặp qua từng hình ảnh trong phần tử images-container
+    $(this).find('.images-container  img').each(function () {
+      var imageUrl = $(this).attr('src'); // Lấy đường dẫn hình ảnh
+      images.push(imageUrl); // Thêm đường dẫn hình ảnh vào mảng images
+    });
+
+    // Tạo đối tượng JSON chứa thông tin nhãn và hình ảnh
+    var imageDataItem = {
+      label: label,
+      images: images
+    };
+
+    // Thêm đối tượng vào mảng imageData
+    imageData.push(imageDataItem);
+  });
+
+  return imageData;
+}

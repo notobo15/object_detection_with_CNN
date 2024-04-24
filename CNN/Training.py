@@ -9,7 +9,7 @@ from keras.callbacks import ModelCheckpoint
 import os
 import glob
 class Training:
-    def __init__(self, size=224, epochs=20, patch_sizes=64, optimizer='adam', loss='categorical_crossentropy', test_size=0.2, num_classes=0, folder_path=''):
+    def __init__(self, size=112, epochs=20, patch_sizes=64, optimizer='adam', loss='categorical_crossentropy', test_size=0.2, num_classes=0, folder_path=''):
         self.model = None
         self.size = size
         self.epochs = epochs
