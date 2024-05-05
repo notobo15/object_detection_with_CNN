@@ -1,15 +1,14 @@
 import cv2
 from keras.applications.mobilenet import MobileNet
-from keras.layers import GlobalAveragePooling2D, Dense, Dropout
+from keras.layers import GlobalAveragePooling2D, Dense, Dropout, GlobalMaxPooling2D
 from keras.models import Model
 import tensorflowjs as tfjs
 from keras.preprocessing.image import ImageDataGenerator
 import keras
 from keras.callbacks import ModelCheckpoint
 import os
-import glob
 class Training:
-    def __init__(self, size=112, epochs=20, patch_sizes=64, optimizer='adam', loss='categorical_crossentropy', test_size=0.2, num_classes=0, folder_path=''):
+    def __init__(self, size=112, epochs=20, patch_sizes=64, optimizer='adam', loss='categorical_crossentropy', test_size=0.2, num_classes=0, folder_path='',PoolingType = 'AveragePooling'):
         self.model = None
         self.size = size
         self.epochs = epochs
@@ -19,11 +18,16 @@ class Training:
         self.num_classes = num_classes
         self.test_size = test_size
         self.folder_path = folder_path
+        self.PoolingType = PoolingType
 
     def build_model(self):
         base_model = MobileNet(include_top=False, weights="imagenet", input_shape=(self.size,self.size,3))
         x = base_model.output
-        x = GlobalAveragePooling2D()(x)
+        if self.PoolingType == 'MaxPooling':
+             x = GlobalMaxPooling2D()(x)
+        else:
+            x = GlobalAveragePooling2D()(x)
+
         x = Dense(1024, activation='relu')(x)
         x = Dropout(0.25)(x)
         x = Dense(256, activation='relu')(x)
@@ -66,11 +70,15 @@ class Training:
         # step_train = train_generator.n//train_generator.batch_size
         # step_val = validation_generator.n//validation_generator.batch_size
 
-        self.model.fit_generator(generator=train_generator, steps_per_epoch=len(train_generator),
-                                validation_data=validation_generator,
-                                validation_steps=len(validation_generator),
-                                callbacks=callback_list,
-                                epochs=self.epochs)
+        # self.model.fit_generator(generator=train_generator, steps_per_epoch=len(train_generator),
+        #                         validation_data=validation_generator,
+        #                         validation_steps=len(validation_generator),
+        #                         callbacks=callback_list,
+        #                         epochs=self.epochs)
+
+        self.model.fit(train_generator, steps_per_epoch=len(train_generator),
+               validation_data=validation_generator, validation_steps=len(validation_generator),
+               callbacks=callback_list, epochs=self.epochs)
 
     def delete_model_checkpoint(self):
         if os.path.exists(self.model_checkpoint_path):
