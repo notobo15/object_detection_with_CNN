@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-{% include 'components/modal2.html' %}
+{% include 'components/modal.html' %}
 
 <div class="container min-vh-100 my-3">
 
   <h1 class="mb-4 font-weight-bold text-primary">Custom Training</h1>
   <div class="alert alert-primary alert-dismissible fade show" role="alert">
-    Craft your own image-based dataset for object detection, offering complete control over the data used for training models tailored to specific detection tasks.
+    Craft your own image-based dataset for object detection, offering complete control over the data used for training
+    models tailored to specific detection tasks.
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -64,7 +65,7 @@
               style="background-color: #d2e3fc; color: #1967d2">
               <span><i class="fas fa-upload"></i></span>
               Choose images from your files
-              <input id="upload_img" name="image"  accept="image/*" type="file" hidden required />
+              <input id="upload_img" name="image" accept="image/*" type="file" hidden required />
             </label>
           </div>
 
@@ -92,6 +93,7 @@
             </div>
             {% endfor %} {% endcomment %}
           </div>
+          <div id="prediction-result"></div>
         </div>
       </div>
     </div>

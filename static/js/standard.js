@@ -34,7 +34,6 @@ $(document).ready(function () {
     let result = await Array.from(predictions)
       .map(function (p, i) {
         let per = (p * 100).toFixed(1)
-        console.log("per" + per)
         if (maxPer < per) {
           maxPer = per
           maxPerIndex = +i
@@ -44,7 +43,11 @@ $(document).ready(function () {
           probability: parseFloat(per).toFixed(1),
           className: LIST[i]
         };
+      })
+      .sort(function (a, b) {
+        return b.probability - a.probability;
       });
+
 
     console.log(result)
     if (sum < 100) {
@@ -55,35 +58,35 @@ $(document).ready(function () {
       result[maxPerIndex].probability = +result[maxPerIndex].probability - 0.1;
       result[maxPerIndex].probability = result[maxPerIndex].probability.toFixed(1)
     }
+    console.log(result)
+    result = result.filter((item) => item.probability > 5)
 
-    // .sort(function (a, b) {
-    //   return b.probability - a.probability;
-    // });
-    console.log(result);
     await loadingEle.hide();
     let html = ``
-    result.forEach((item) => {
+    result.forEach((item, index) => {
       html += `
       <div class="d-flex justify-content-between align-items-center mb-3">
       <h6 class="mb-0 mr-3" style="width: 30%">${item.className}</h6>
-      <div class="progress" style="width:70%; height: 29px; border-radius: 6px">
+      <div class="progress" style="width:60%; height: 29px; border-radius: 6px">
         <div class="progress-bar" role="progressbar" style="width: ${item.probability}%; color: ${item.probability > 15 ? `#fff` : `#000`};" aria-valuenow="${item.probability}" aria-valuemin="0" aria-valuemax="100">
-          ${item.probability}%
+        <!-- ${item.probability}% -->
         </div>
       </div>
+      <div style="width: 10%" class="pl-2"><b>${index === 0 ? 1 : 0}</b></div>
     </div>
       `
     })
     $("#output").html(html)
+    $("#prediction-result").html(`<hr >
+    <div class="w-100 p-3 bg-success text-center text-white font-weight-bold" style="font-size: 20px; border-radius: 10px;">
+      Prediction Result:
+      <div style="font-size: 26px">${result[0].className}</div>
+    </div>`)
+
     changeColorProcessBar()
 
 
   });
-
-  // $("select").select2({
-  //   width: "resolve",
-  // });
-
   Fancybox.bind("[data-fancybox]", {
     groupAll: true,
     buttons: ["zoom", "slideShow", "fullScreen", "thumbs", "close"],

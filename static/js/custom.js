@@ -12,10 +12,8 @@ function loadImages(e) {
       // Tạo và thêm hình ảnh và nút xóa vào container
       ImageContainerEle.append(`
             <div style="display: inline-block; position: relative;">
-                <a href="" class="image-link">
-                  <img src="${imgSrc}" style="height: 58px;"> <!-- Điều chỉnh kích thước hình ảnh -->
-                  </a>
-                  <button class="delete-btn" onclick="delete_image(this)"><i class="fas fa-trash-alt text-white"></i></button>
+            <img src="${imgSrc}" style="height: 58px;">
+            <button class="delete-btn" onclick="delete_image(this)"><i class="fas fa-trash-alt text-white"></i></button>
             </div>
         `);
     };
@@ -105,19 +103,39 @@ $("#btn_predict").click(async function () {
   let predictions = await predict(model, tensor);
 
   console.log(predictions);
-  const CLASS_LABELS = getLabels()
-  // let LABELS = trainingData['trainingData'].map((item, index) => item.label)
+  const CLASS_LABELS = getLabels();
+  let sum = 0;
+  let maxPerIndex = 0
+  let maxPer = 0
   let result = await Array.from(predictions)
     .map(function (p, i) {
+      let per = (p * 100).toFixed(1)
+      if (maxPer < per) {
+        maxPer = per
+        maxPerIndex = +i
+      }
+      sum += +per
       return {
-        probability: (p * 100).toFixed(1),
+        probability: parseFloat(per).toFixed(1),
         className: CLASS_LABELS[i]
       };
     })
-  // .sort(function (a, b) {
-  //   return b.probability - a.probability;
-  // });
-  console.log(result);
+    .sort(function (a, b) {
+      return b.probability - a.probability;
+    });
+
+
+  console.log(result)
+  if (sum < 100) {
+    result[maxPerIndex].probability = +result[maxPerIndex].probability + 0.1;
+    result[maxPerIndex].probability = result[maxPerIndex].probability.toFixed(1)
+
+  } else if (sum > 100) {
+    result[maxPerIndex].probability = +result[maxPerIndex].probability - 0.1;
+    result[maxPerIndex].probability = result[maxPerIndex].probability.toFixed(1)
+  }
+  console.log(result)
+  result = result.filter((item) => item.probability > 5)
   await loadingEle.hide();
   showProgressBar(result)
   changeColorProcessBar()
@@ -126,19 +144,25 @@ $("#btn_predict").click(async function () {
 function showProgressBar(result) {
   $(".predict_container").show()
   let html = ``
-  result.forEach((item) => {
+  result.forEach((item, index) => {
     html += `
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h6 class="mb-0" style="width: 30%">${item.className}</h6>
-      <div class="progress " style="width:70%; height: 29px; border-radius: 6px">
+      <h6 class="mb-0 mr-3" style="width: 30%">${item.className}</h6>
+      <div class="progress" style="width:60%; height: 29px; border-radius: 6px">
         <div class="progress-bar" role="progressbar" style="width: ${item.probability}%; color: #000;" aria-valuenow="${item.probability}" aria-valuemin="0" aria-valuemax="100">
-          ${item.probability}%
+          <!-- ${item.probability}% -->
         </div>
       </div>
+      <div style="width: 10%" class="pl-2"><b>${index === 0 ? 1 : 0}</b></div>
   </div>
     `
   })
   $("#output").html(html)
+  $("#prediction-result").html(`<hr >
+  <div class="w-100 p-3 bg-success text-center text-white font-weight-bold" style="font-size: 20px; border-radius: 10px;">
+    Prediction Result:
+    <div style="font-size: 26px">${result[0].className}</div>
+  </div>`)
 }
 
 
@@ -238,8 +262,12 @@ window.addEventListener('beforeunload', function (e) {
   e.preventDefault();
   e.returnValue = '';
 });
-
-let uuid = getUuid();
+function delete_image(event) {
+  let containeraImagesEle = $(event).parent().parent()
+  $(event).parent().remove()
+  $(containeraImagesEle).siblings(".open-samples-label").text(`${$(containeraImagesEle).find('img').length} Image Samples`)
+}
+let uuid = localStorage.getItem("uuid");
 $("document").ready(async function () {
   loadModel(uuid)
 });

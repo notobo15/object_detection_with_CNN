@@ -298,6 +298,7 @@ def train_model2(request):
         data = body['trainingData']
         setting = body['setting']
 
+        poolingType=setting.get('pooling', 'AveragePooling')
         epochs=int(setting.get('epochs', 20))
         patch_sizes=int(setting.get('patch_sizes', 64))
         test_size=float(setting.get('test_size', 0.2))
@@ -364,7 +365,7 @@ def train_model2(request):
 
         # folder = os.path.join(PROJECT_PATH, 'static', 'uploads', '653da5c0-8b41-47ba-ae52-90095c7190bc')
         # setting = Setting(padding=0, epochs=10, patch_sizes=32, stride=0, optimizer='adam', loss='categorical_crossentropy', activation='softmax',max_pooling=2, test_size=0.2, num_classes=num_classes)
-        flower_classifier = Training(size=112, epochs=epochs, patch_sizes=patch_sizes,test_size=test_size, optimizer=optimizer,num_classes=num_classes,folder_path = new_folder_path)
+        flower_classifier = Training(size=112, epochs=epochs, patch_sizes=patch_sizes,test_size=test_size, optimizer=optimizer,num_classes=num_classes,folder_path = new_folder_path,PoolingType=poolingType)
 
         # flower_classifier = Training(num_classes)
         flower_classifier.build_model()

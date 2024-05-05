@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 {% load static %} 
 {% block content %}
-{% include 'components/modal2.html'%}
+{% include 'components/modal.html'%}
 
 <div class="container min-vh-100">
   <div class="d-flex justify-content-end mt-3">
@@ -136,7 +136,7 @@
             <label for="upload_img" class="d-flex flex-column align-items-center justify-content-center btn mt-3 p-3"
               style="background-color: #d2e3fc; color: #1967d2">
               <span><i class="fas fa-upload"></i></span>
-              Choose images from your files, or drag &amp; drop here
+              Choose images from your files
             </label>
           </div>
 
@@ -148,7 +148,7 @@
         </form>
         <div>
           <button style="background-color: #d2e3fc" class="btn w-100 p-3 text-center my-3">
-            <h5 class="font-weight-bold" id="btn_predict" type="submit">PREDICT</h5>
+            <h5 class="font-weight-bold mb-0" id="btn_predict" type="submit">PREDICT</h5>
           </button>
         </div>
         <div>
@@ -167,7 +167,7 @@
             </div>
             {% endfor %}
           </div>
-        </div>
+         <div id="prediction-result"></div>
       </div>
     </div>
 

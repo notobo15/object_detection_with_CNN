@@ -1,18 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="container my-3">
-  <div class="jumbotron jumbotron-fluid bg-light pb-2">
+<div class="container my-5">
+  <div class="jumbotron jumbotron-fluid bg-light pb-2 pt-3" style="border-radius: 10px;">
     <div class="container">
-      <h1 class="display-4">New Project</h1>
+      <h1 class="display-4 font-weight-bold">New Project</h1>
       <p class="lead">
-        Use ready-made datasets in TensorFlow for fast and easy model trials.
+        Choose between using TensorFlow's ready-made datasets for easy training or crafting your own dataset for
+        personalized control in machine learning training.
       </p>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-6 card-animation">
-      <a class="card text-dark text-decoration-none p-2 bg-light border rounded" href="{% url 'standardTraining' %}">
+      <a class="card text-dark text-decoration-none p-3 border" style="border-radius: 10px;"
+        href="{% url 'standardTraining' %}">
         <img src="{% static 'images/tensorflow.png' %}" class="card-img-top" />
         <div class="card-body">
           <h2 class="">Standard Training</h2>
@@ -24,7 +26,8 @@
       </a>
     </div>
     <div class="col-sm-6 card-animation">
-      <a class="card text-dark text-decoration-none p-2 bg-light border rounded" href="{% url 'customTraining' %}">
+      <a class="card text-dark text-decoration-none p-3 border" style="border-radius: 10px;"
+        href="{% url 'customTraining' %}">
         <img src="{% static 'images/create.webp' %}" class="card-img-top" />
         <div class="card-body">
           <h2 class="">New Training</h2>

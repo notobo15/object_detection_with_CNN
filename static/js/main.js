@@ -34,19 +34,13 @@ function ShowToast(message = "This is a toast", title = "Data Error", type = "er
   }
   toastr[type](message, title);
 }
-function delete_image(event) {
-  let containeraImagesEle = $(event).parent().parent()
-  let childrenEle = $(containeraImagesEle).children("div")
-  $(containeraImagesEle).siblings(".open-samples-label").text(`${childrenEle.length} Image Samples`)
-  $(event).parent().remove()
-}
+
 $('.images-container').on('click', '.delete-btn', function (event) {
   event.preventDefault();
   event.stopPropagation();
   let container = $(this).parent().parent()
 
   $(this).closest('.image-link').remove();
-
 
   // console.log($(container).find(".image-link"))
   $(container).parent().siblings("h6").text(`${$(container).find(".image-link").length} Images Samples`)
@@ -107,6 +101,7 @@ $('#file-input').change(function () {
 
     };
   }
+
 });
 
 $('#upload_img').change(function () {
@@ -120,6 +115,8 @@ $('#upload_img').change(function () {
     }
     reader.readAsDataURL(file);
   }
+  $("#output").empty();
+  $("#prediction-result").empty();
 });
 
 function checkClassNotEmptyImages() {
