@@ -3,7 +3,6 @@ asgiref==3.7.2
 astunparse==1.6.3
 backports.zoneinfo==0.2.1
 cachetools==5.3.3
-certifi @ file:///home/conda/feedstock_root/build_artifacts/certifi_1707022139797/work/certifi
 charset-normalizer==3.3.2
 click==8.1.7
 Django==3.2.25
