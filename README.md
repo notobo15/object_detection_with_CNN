@@ -3,34 +3,41 @@
 
 ![alt text](docs/images/home.png)
 
+## [Link File Báo Cáo](https://www.overleaf.com/read/ggttmjkvswmt#9b40b4)
+
 ## Tóm tắt
 - [Xây Dựng Ứng Dụng Nhận Diện Vật Thể qua mô hình CNN](#xây-dựng-ứng-dụng-nhận-diện-vật-thể-qua-mô-hình-cnn)
+  - [Link File Báo Cáo](#link-file-báo-cáo)
   - [Tóm tắt](#tóm-tắt)
-  - [Intro](#intro)
+  - [Giới Thiệu](#giới-thiệu)
   - [Demo](#demo)
-  - [Quick Start](#quick-start)
+      - [Chọn Tạo Mới Project](#chọn-tạo-mới-project)
+      - [Train với Dataset Có Sẵn](#train-với-dataset-có-sẵn)
+      - [Train với Dataset Chính Mình](#train-với-dataset-chính-mình)
+      - [Kết Quả Dự Đoán](#kết-quả-dự-đoán)
+  - [Cài Đặt Nhanh](#cài-đặt-nhanh)
     - [Lưu Ý](#lưu-ý)
-  - [Authors](#authors)
-  - [Copyright and license](#copyright-and-license)
+  - [Tác Giả](#tác-giả)
+  - [Bản quyền và giấy phép](#bản-quyền-và-giấy-phép)
 
   
 
-## Intro
+## Giới Thiệu
 - Dễ dàng và nhanh chóng để tạo mô hình máy học cho trên web của bạn!
 - Xây dựng mạng nơ-ron tích chập (CNN) đóng vai trò thiết yếu trong thị giác máy tính, giúp máy tính nhận diện và phân loại vật thể từ hình ảnh với độ chính xác cao. 
 - Kết hợp với kiến trúc MobileNet mang lại khả năng nhận diện và phân loại vật thể từ hình ảnh với hiệu quả cao và tốc độ nhanh, ngay cả trên các thiết bị di động. MobileNet tối ưu hóa quá trình học đặc trưng thông qua các lớp tích chập phân tách theo chiều sâu, giảm thiểu số lượng phép tính cần thiết mà vẫn duy trì độ chính xác cao.  
 
 ## Demo
-Chọn Tạo Mới Project
+#### Chọn Tạo Mới Project
 ![alt text](docs/images/new-project.png)
-Train với Dataset Có Sẵn
+#### Train với Dataset Có Sẵn
 ![alt text](docs/images/standard-training.png)
-Train với Dataset Chính Mình
+#### Train với Dataset Chính Mình
 ![alt text](docs/images/custom-training.png)
-Kết Quả Dự Đoán 
+#### Kết Quả Dự Đoán 
 ![alt text](docs/images/prediction.png)
 
-## Quick Start  
+## Cài Đặt Nhanh  
 
 ### Lưu Ý
 **Do một số package không còn hổ trợ trên Windows và để tránh lỗi không mong muốn trong quá trình cài đặt cấu hình tối thiểu là:**
@@ -55,9 +62,9 @@ pip install -r setup.txt
 python manage.py runserver
 ```
 
-## Authors
+## Tác Giả
 - Nguyen Thanh Binh
 - Ngo Kieu Lam
 
-## Copyright and license
+## Bản quyền và giấy phép
 Code released under the [MIT License](https://github.com/notobo15/detector_python/blob/v1.0.0/LICENSE).
