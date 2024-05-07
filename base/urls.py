@@ -11,6 +11,7 @@ urlpatterns = [
   path('train/standard-training/<slug:slug>', views.standardTrainingDetail, name = 'standardTrainingDetail'),
 
   path('train/custom-training', views.customTraining, name = 'customTraining'),
+  path('train/import-model-training', views.importModelTraining, name = 'importModelTraining'),
 
    path('predict2', views.PredictImageCustomTrain.as_view(), name='predictCustomTrain'),
 

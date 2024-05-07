@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'components/modal.html' %}
+
+<div class="container min-vh-100 my-3">
+
+  <h1 class="mb-4 font-weight-bold text-primary">Import Model Training</h1>
+  <div class="alert alert-primary alert-dismissible fade show" role="alert">
+    Craft your own image-based dataset for object detection, offering complete control over the data used for training
+    models tailored to specific detection tasks.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-4">
+
+        <div class="text-center">
+
+          {% if uuid %}
+         
+          <h4 class="text-center">Preview</h4>
+          <form id="form_predict w-25">
+            <div class="">
+              <input name="dataset" value="cifar-10" type="text" hidden />
+              <label for="upload_img" class="d-flex flex-column align-items-center justify-content-center btn mt-3 p-3"
+                style="background-color: #d2e3fc; color: #1967d2">
+                <span><i class="fas fa-upload"></i></span>
+                Choose images from your files
+                <input id="upload_img" name="image" accept="image/*" type="file" hidden required />
+              </label>
+            </div>
+
+            <img id="imagePreview" style="width: 100%" src="{% static 'images/image_placeholder.png'%}" alt="" />
+          </form>
+          <div>
+            <button style="background-color: #d2e3fc" class="btn w-100 p-3 text-center my-3" id="btn_predict">
+              <h5 class="font-weight-bold" type="submit">PREDICT</h5>
+            </button>
+          </div>
+          <div class="predict_container">
+            <h5 class="">OUTPUT:</h5>
+            <div id="output">
+            </div>
+            <div id="prediction-result"></div>
+          </div>
+          
+        <script>
+          $("document").ready(async function() {
+            uuid = '{{uuid|safe}}';
+            model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
+
+            $("#btn_predict").click(async function() {
+              let image = $('#imagePreview')[0];
+              {% comment %} 
+              if (!image) {
+                ShowToast("Please, upload image")
+                return
+              } {% endcomment %}
+
+              await loadingEle.show();
+              LIST = {{labels|safe}};
+              let tensor = await convertImageToTensor(image)
+              // 2. Predict
+              let predictions = await model.predict(tensor);
+              predictions = predictions.dataSync();
+              console.log(predictions)
+              let sum = 0;
+              let maxPerIndex = 0
+              let maxPer = 0
+              let result = await Array.from(predictions)
+                .map(function(p, i) {
+                  let per = (p * 100).toFixed(1)
+                  if (maxPer < per) {
+                    maxPer = per
+                    maxPerIndex = +i
+                  }
+                  sum += +per
+                  return {
+                    probability: parseFloat(per).toFixed(1),
+                    className: LIST[i]
+                  };
+                })
+                .sort(function(a, b) {
+                  return b.probability - a.probability;
+                });
+              console.log(result)
+              if (sum < 100) {
+                result[maxPerIndex].probability = +result[maxPerIndex].probability + 0.1;
+                result[maxPerIndex].probability = result[maxPerIndex].probability.toFixed(1)
+              } else if (sum > 100) {
+                result[maxPerIndex].probability = +result[maxPerIndex].probability - 0.1;
+                result[maxPerIndex].probability = result[maxPerIndex].probability.toFixed(1)
+              }
+              console.log(result)
+              result = result.filter((item) => item.probability > 5)
+              await loadingEle.hide();
+              let html = ``
+              result.forEach((item, index) => {
+                html += `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0 mr-3" style="width: 30%">${item.className}</h6>
+                <div class="progress" style="width:60%; height: 29px; border-radius: 6px">
+                  <div class="progress-bar" role="progressbar" style="width: ${item.probability}%; color: ${item.probability > 15 ? `#fff` : `#000`};" aria-valuenow="${item.probability}" aria-valuemin="0" aria-valuemax="100">
+                  <!-- ${item.probability}% -->
+                  </div>
+                </div>
+                <div style="width: 10%" class="pl-2"><b>${index === 0 ? 1 : 0}</b></div>
+              </div>
+                `
+              })
+              $("#output").html(html)
+              $("#prediction-result").html(`<hr >
+              <div class="w-100 p-3 bg-success text-center text-white font-weight-bold" style="font-size: 20px; border-radius: 10px;">
+                Prediction Result:
+                <div style="font-size: 26px">${result[0].className}</div>
+              </div>`)
+              changeColorProcessBar()
+            })
+            
+          });
+        </script>
+          {% else %}
+          <form method="POST" enctype="multipart/form-data">
+            <label for="import-model" class="btn btn-primary  px-3 py-2"
+              style="background-color: #d2e3fc;color: #1967d2; ">
+              <input id="import-model" name="file" type="file" hidden />
+              <div><i class="fas fa-upload"></i></div>
+              Upload model file
+            </label>
+            <button type="submit">Submit</button>
+          </form>
+          
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock %}

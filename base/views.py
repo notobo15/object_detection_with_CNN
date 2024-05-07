@@ -27,7 +27,7 @@ from .train_model import train_model_async
 from CNN import Setting
 from CNN.Train2 import Building
 import base64
-
+import zipfile
 def home(request):
     return render(request, 'home.html')
 
@@ -353,7 +353,8 @@ def train_model2(request):
         # flower_classifier.save_model(new_folder_path)
 
         class_names = [dt['label'] for dt in list(data)]
-            
+
+       
         # img_width = img_height = 32
         num_classes = len(os.listdir(new_folder_path))
         # classifier = Building(new_folder_path, img_height, img_width, num_classes, class_names, epochs,patch_sizes,optimizer,test_size)
@@ -386,7 +387,19 @@ def train_model2(request):
                         print(f"Không thể xóa {file_path}: {e}")
                 os.rmdir(subfolder_path)
 
-        
+        # zip the model
+ 
+        with open(os.path.join(new_folder_path,'label.txt'), 'w') as file:
+            for index, class_name in enumerate(class_names):
+                file.write(f"{index} {class_name}\n")
+
+        with zipfile.ZipFile(os.path.join(new_folder_path,'tfjs.zip'), 'w') as zipf:
+            for root, _, files in os.walk(new_folder_path):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    # Kiểm tra phần mở rộng của file và chỉ zip file có phần mở rộng là .json, .bin, hoặc label.txt
+                    if file.endswith('.json') or file.endswith('.bin') or file == 'label.txt':
+                        zipf.write(file_path, arcname=os.path.relpath(file_path, new_folder_path))
 
         # labels = models.Label.objects.filter(dataset= models.Dataset.objects.get(""))
 
@@ -441,3 +454,40 @@ def migarate_data(request):
 
 
     return JsonResponse({'message': 'Files uploaded successfully'})
+
+
+
+def importModelTraining(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        uploaded_file = request.FILES['file']
+        
+        # Tạo thư mục mới với UUID
+        folder_uuid = str(uuid.uuid4())
+        folder_path = os.path.join(PROJECT_PATH, 'static', 'uploads', folder_uuid)
+        os.makedirs(folder_path)
+        
+        # Lưu file zip vào thư mục tạm thời
+        with open(os.path.join(folder_path, uploaded_file.name), 'wb') as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+        
+        # Giải nén file zip vào thư mục mới
+        zip_file_path = os.path.join(folder_path, uploaded_file.name)
+        shutil.unpack_archive(zip_file_path, folder_path)
+        
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                if file.endswith('.zip'):
+                    file_path = os.path.join(root, file)
+                    os.remove(file_path)
+
+        labels = []
+        # Mở file label.txt để đọc
+        with open(os.path.join(folder_path, 'label.txt'), 'r') as file:
+            # Duyệt qua từng dòng trong file
+            for line in file:
+                # Loại bỏ ký tự index và khoảng trắng ở đầu dòng, sau đó thêm vào danh sách labels
+                name = line.split(' ', 1)[1].strip()
+                labels.append(name)
+        return render(request, 'import-model-training.html', {'uuid': folder_uuid, 'labels': labels})
+    return render(request, 'import-model-training.html')
