@@ -314,7 +314,6 @@ def train_model2(request):
         #     max_pooling=int(setting.get('max_pooling2d', 2)),
         #     test_size=int(setting.get('test_size', 0.2))
         # )
-
         new_folder_name = str(uuid.uuid4())
         new_folder_path = os.path.join(PROJECT_PATH, 'static', 'uploads', new_folder_name)
         # new_folder_path = os.path.join(parent_dir, new_folder_name)
