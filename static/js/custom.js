@@ -231,7 +231,8 @@ $(".btn_train_model").click(function () {
 
       }
       console.log('Load model');
-      //        console.log(model.summary());
+      export_model(uuid);
+      console.log(model.summary());
       // console.log(data); // In ra kết quả từ server
     })
     .catch(error => {

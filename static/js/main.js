@@ -168,7 +168,7 @@ async function predict(model, tensor) {
 async function loadModel(uuid) {
   model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
   console.log('Load model done')
-  // console.log(model.summary());
+  console.log(model.summary());
   return model;
 }
 
@@ -208,3 +208,13 @@ function getImageData() {
 
   return imageData;
 }
+function export_model(uuid) {
+  let export_link = `/static/uploads/${uuid}/tfjs.zip`
+  $('.btn_export_model').attr('href', export_link);
+  $('.btn_export_model').attr('download', export_link);
+}
+$(".btn_export_model").click(function () {
+  if (!$('.btn_export_model').attr('href')) {
+    ShowToast("The model must be trained before exporting.")
+  }
+})

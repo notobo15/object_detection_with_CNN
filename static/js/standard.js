@@ -85,7 +85,6 @@ $(document).ready(function () {
 
     changeColorProcessBar()
 
-
   });
   Fancybox.bind("[data-fancybox]", {
     groupAll: true,
@@ -148,6 +147,7 @@ $(".btn_train_model").click(function () {
       console.log('Load model');
       console.log(data); // In ra kết quả từ server
       saveUuid(data?.uuid)
+      export_model(uuid);
     })
     .catch(error => {
       console.error('Error:', error);
