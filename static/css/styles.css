@@ -3,6 +3,14 @@
     var(--scrollbar-track, rgba(255, 255, 255, 0));
   scrollbar-width: thin;
 }
+
+.nav-item.active {
+  background: #cce5ff;
+}
+.nav-item.active .nav-link {
+  color: #004085 !important;
+}
+
 .open-container {
   display: none;
 }

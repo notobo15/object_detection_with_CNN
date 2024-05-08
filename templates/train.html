@@ -4,15 +4,15 @@
 <div class="container my-5">
   <div class="jumbotron jumbotron-fluid bg-light pb-2 pt-3" style="border-radius: 10px;">
     <div class="container">
-      <h1 class="display-4 font-weight-bold">New Project</h1>
-      <p class="lead">
+      <h1 class="display-4 font-weight-bold text-primary">New Project</h1>
+      <p class="lead text-secondary">
         Choose between using TensorFlow's ready-made datasets for easy training or crafting your own dataset for
         personalized control in machine learning training.
       </p>
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-6 card-animation">
+    <div class="col-sm-4 card-animation">
       <a class="card text-dark text-decoration-none p-3 border" style="border-radius: 10px;"
         href="{% url 'standardTraining' %}">
         <img src="{% static 'images/tensorflow.png' %}" class="card-img-top" />
@@ -25,7 +25,7 @@
         </div>
       </a>
     </div>
-    <div class="col-sm-6 card-animation">
+    <div class="col-sm-4 card-animation">
       <a class="card text-dark text-decoration-none p-3 border" style="border-radius: 10px;"
         href="{% url 'customTraining' %}">
         <img src="{% static 'images/create.webp' %}" class="card-img-top" />
@@ -38,21 +38,18 @@
         </div>
       </a>
     </div>
-    <!-- <div class="col-sm-4">
-      <a
-        class="card text-black text-decoration-none p-2 bg-light border rounded"
-        href=""
-      >
-        <img src="https://picsum.photos/600/300" class="card-img-top" />
+    <div class="col-sm-4 card-animation">
+      <a class="card text-dark text-decoration-none p-3 border" style="border-radius: 10px;"
+        href="{% url 'importModelTraining' %}">
+        <img src="{% static 'images/import.jpg' %}" class="card-img-top" />
         <div class="card-body">
-          <h2 class="">Customized Training</h2>
+          <h2 class="">Import Training</h2>
           <p class="card-text">
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
+            Bringing in a pre-trained model, honed through prior training, and employing it for object detection tasks, leveraging its learned insights to make accurate predictions.
           </p>
         </div>
       </a>
-    </div> -->
+    </div>
   </div>
 </div>
 {% endblock %}

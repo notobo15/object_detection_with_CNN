@@ -22,7 +22,7 @@
 
           {% if uuid %}
          
-          <h4 class="text-center">Preview</h4>
+          {% comment %} <h4 class="text-center">Preview</h4> {% endcomment %}
           <form id="form_predict w-25">
             <div class="">
               <input name="dataset" value="cifar-10" type="text" hidden />
@@ -36,11 +36,9 @@
 
             <img id="imagePreview" style="width: 100%" src="{% static 'images/image_placeholder.png'%}" alt="" />
           </form>
-          <div>
             <button style="background-color: #d2e3fc" class="btn w-100 p-3 text-center my-3" id="btn_predict">
               <h5 class="font-weight-bold" type="submit">PREDICT</h5>
             </button>
-          </div>
           <div class="predict_container">
             <h5 class="">OUTPUT:</h5>
             <div id="output">
@@ -50,17 +48,16 @@
           
         <script>
           $("document").ready(async function() {
+            ShowToast("Upload the model was Succussfully", 'Alert', 'success')
             uuid = '{{uuid|safe}}';
             model = await tf.loadLayersModel(`http://127.0.0.1:8000/static/uploads/${uuid}/model.json`);
 
             $("#btn_predict").click(async function() {
               let image = $('#imagePreview')[0];
-              {% comment %} 
-              if (!image) {
-                ShowToast("Please, upload image")
+              if (!isUploaded) {
+                ShowToast("Please, choose images from your files")
                 return
-              } {% endcomment %}
-
+              }
               await loadingEle.show();
               LIST = {{labels|safe}};
               let tensor = await convertImageToTensor(image)
@@ -124,14 +121,14 @@
           });
         </script>
           {% else %}
-          <form method="POST" enctype="multipart/form-data">
+          <form method="POST" enctype="multipart/form-data" class="d-flex flex-column">
             <label for="import-model" class="btn btn-primary  px-3 py-2"
               style="background-color: #d2e3fc;color: #1967d2; ">
-              <input id="import-model" name="file" type="file" hidden />
+              <input id="import-model" name="file" type="file" hidden accept=".zip" />
               <div><i class="fas fa-upload"></i></div>
               Upload model file
             </label>
-            <button type="submit">Submit</button>
+            <button class="btn btn-primary mt-2 py-2" type="submit">Upload Now <i class="ml-2 fas fa-paper-plane"></i></button>
           </form>
           
           {% endif %}

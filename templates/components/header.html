@@ -15,6 +15,22 @@
       <li class="nav-item">
         <a class="nav-link font-weight-bold" href="{% url 'customTraining' %}"><span class="pr-1"><i class="fas fa-wrench"></i></span> Custom Training</a>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" href="{% url 'importModelTraining' %}"><span class="pr-1"><i class="fas fa-file-import"></i></span> Import Training</a>
+      </li>
     </ul>
   </div>
 </nav>
+<script>
+  $(document).ready(function() {
+    const currentUrl = window.location.href;
+    $('.navbar-nav .nav-item').each(function() {
+        $(this).removeClass('active');
+        var itemUrl = $(this).find('a').attr('href');
+        if (currentUrl.includes(itemUrl)) {
+            $(this).addClass('active');
+        }
+    });
+});
+</script>
