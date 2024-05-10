@@ -1,10 +1,10 @@
 # Xây Dựng Ứng Dụng Nhận Diện Vật Thể qua mô hình CNN
 
 <p align="center">
-  <a href="https://github.com/notobo15/object_detection_with_CNN/releases/tag/v1.0.0">
+  <a href="https://github.com/notobo15/object_detection_with_CNN/releases/tag/v1.1.0">
     <img src="https://img.shields.io/github/v/release/notobo15/object_detection_with_CNN?label=Version&style=flat-square" alt="Version">
   </a>
-  <a href="https://github.com/notobo15/object_detection_with_CNN/releases/tag/v1.0.0">
+  <a href="https://github.com/notobo15/object_detection_with_CNN/releases/tag/v1.1.0">
     <img src="https://img.shields.io/github/v/release/notobo15/object_detection_with_CNN?label=Release&style=flat-square" alt="Release">
   </a>
   <a href="https://opensource.org/licenses/MIT">
@@ -147,7 +147,7 @@ Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 11 ✔ |
 **Due to some packages no longer being supported on Windows, to prevent unexpected errors during installation, the minimum configuration is as follows**
 
 ```bash
-1. Hệ điểu hành: Linux
+1. Operating System: Linux
 2. Python Version: >=3.7
 3. Tensorflow Version: >=2.4
 ```
@@ -156,7 +156,7 @@ Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 11 ✔ |
 
 ### Step 1: Clone this repository
 
-- [Download the latest release](https://github.com/notobo15/object_detection_with_CNN/releases/tag/v1.0.0)
+- [Download the latest release](https://github.com/notobo15/object_detection_with_CNN/releases/tag/v1.1.0)
 
 - Clone the repo: `git clone https://github.com/notobo15/object_detection_with_CNN.git`
 
@@ -180,4 +180,4 @@ python manage.py runserver
 
 ## Copyright and Licenses
 
-Code released under the [MIT License](https://github.com/notobo15/object_detection_with_CNN/blob/v1.0.0/LICENSE).
+Code released under the [MIT License](https://github.com/notobo15/object_detection_with_CNN/blob/v1.1.0/LICENSE).
