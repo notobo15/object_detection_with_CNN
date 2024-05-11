@@ -218,3 +218,13 @@ $(".btn_export_model").click(function () {
     ShowToast("The model must be trained before exporting.")
   }
 })
+
+function showAnalyst(uuid) {
+  let html = `
+  <a class="btn btn-outline-success mt-3" href="/static/uploads/${uuid}/analyst.png" data-fancybox="single" data-caption="Single image">Show Analyst <i class="fas fa-chart-line ml-2"></i>
+  </a>
+  `
+  $(".show_analyst").html(html)
+  $(".show_analyst").removeClass("d-none");
+
+}

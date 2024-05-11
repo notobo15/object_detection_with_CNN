@@ -1,3 +1,4 @@
+localStorage.removeItem("uuid")
 
 function loadImages(e) {
   let image_ele = e.srcElement
@@ -233,6 +234,7 @@ $(".btn_train_model").click(function () {
       console.log('Load model');
       export_model(uuid);
       console.log(model.summary());
+      showAnalyst(uuid);
       // console.log(data); // In ra kết quả từ server
     })
     .catch(error => {
@@ -259,10 +261,10 @@ function TotalClass() {
 
 
 
-window.addEventListener('beforeunload', function (e) {
-  e.preventDefault();
-  e.returnValue = '';
-});
+// window.addEventListener('beforeunload', function (e) {
+//   e.preventDefault();
+//   e.returnValue = '';
+// });
 function delete_image(event) {
   let containeraImagesEle = $(event).parent().parent()
   $(event).parent().remove()
@@ -270,5 +272,22 @@ function delete_image(event) {
 }
 let uuid = localStorage.getItem("uuid");
 $("document").ready(async function () {
-  loadModel(uuid)
+  // loadModel(uuid)
+  Fancybox.bind("[data-fancybox]", {
+  });
+
+});
+$('a.navbar-brand, a.nav-link').click(function (event) {
+  event.preventDefault();
+
+  if (localStorage.getItem("uuid") !== null) {
+    var confirmExit = confirm("Are you sure you want to exit?");
+
+    if (confirmExit) {
+      window.location.href = $(this).attr('href');
+    } else {
+    }
+  } else {
+    window.location.href = $(this).attr('href');
+  }
 });

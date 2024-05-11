@@ -1,5 +1,8 @@
 
 $(document).ready(function () {
+
+  if (localStorage.getItem("uuid")) showAnalyst(localStorage.getItem("uuid"));
+
   let searchParams = new URLSearchParams(window.location.search)
   $(`select option[value="${searchParams.get('sizes')}"]`).attr("selected", true);
   $("#size_image").change(function () {
@@ -148,6 +151,7 @@ $(".btn_train_model").click(function () {
       console.log(data); // In ra kết quả từ server
       saveUuid(data?.uuid)
       export_model(uuid);
+      showAnalyst(uuid);
     })
     .catch(error => {
       console.error('Error:', error);

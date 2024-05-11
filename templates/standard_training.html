@@ -46,6 +46,8 @@
         <button class="btn btn-light border w-100 py-2 btn_train_model" style="font-size: 1.3rem; font-weight: 500">
           Train Model
         </button>
+        <div class="text-right show_analyst d-none">
+        </div>
       </div>
       {% for label, images in images_by_labels %}
       <div class="border mb-3 shadow bg-white image_item" style="border-radius: 10px">
@@ -83,7 +85,7 @@
                 min-height: 70px;
               ">
               {% for image in images %}
-                <a href="{% static 'datasets' %}/{{dataset.slug}}/{{ label.name }}/{{ image.name }}" data-fancybox
+                <a href="{% static 'datasets' %}/{{dataset.slug}}/{{ label.name }}/{{ image.name }}" data-fancybox="image"
                   data-caption="{{ label.name }}" class="image-link" style="
                   width: 58px;
                   height: 58px;
