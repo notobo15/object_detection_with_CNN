@@ -124,6 +124,15 @@
 
 <script>
   $(document).ready(function () {
+    let savedSetting = JSON.parse(localStorage.getItem("setting"));
+
+    if (savedSetting) {
+      $("input[name='epochs']").val(savedSetting.epochs);
+      $("input[name='patch_sizes']").val(savedSetting.patch_sizes);
+      $("select[name='pooling']").val(savedSetting.pooling);
+      $("select[name='optimizer']").val(savedSetting.optimizer);
+      $("select[name='test_size']").val(savedSetting.test_size);
+    }
     $(".btn_save_setting").click(function (e) {
       e.preventDefault()
       // let formData = new FormData($("#setting_train")[0]);
