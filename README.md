@@ -14,12 +14,14 @@
 
 ![alt text](docs/images/home.png)
 
-## [Link File Báo Cáo Latex](https://www.overleaf.com/read/ggttmjkvswmt#9b40b4)
+## Report
+
+[File báo cáo latex](https://www.overleaf.com/read/ggttmjkvswmt#9b40b4)
 
 ## Table of Contents
 
 - [Xây Dựng Ứng Dụng Nhận Diện Vật Thể qua mô hình CNN](#xây-dựng-ứng-dụng-nhận-diện-vật-thể-qua-mô-hình-cnn)
-  - [Link File Báo Cáo Latex](#link-file-báo-cáo-latex)
+  - [Report](#report)
   - [Table of Contents](#table-of-contents)
   - [Intro](#intro)
   - [Features](#features)
@@ -40,6 +42,13 @@
     - [3. Import Model Training Page](#3-import-model-training-page)
       - [3.1 Upload the trained model](#31-upload-the-trained-model)
       - [3.2 Import Model Training Page](#32-import-model-training-page)
+    - [4. Admin Page](#4-admin-page)
+      - [4.1 Login](#41-login)
+      - [4.2 Admin Dashboard](#42-admin-dashboard)
+      - [4.3 View Dataset Model Information](#43-view-dataset-model-information)
+      - [4.4 Create New Dataset Model](#44-create-new-dataset-model)
+      - [4.5 Delete Dataset Model](#45-delete-dataset-model)
+      - [4.6 Edit Dataset Model](#46-edit-dataset-model)
   - [Prerequisites](#prerequisites)
   - [Installing](#installing)
     - [Step 1: Clone this repository](#step-1-clone-this-repository)
@@ -142,6 +151,36 @@ Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 11 ✔ |
 
 ![alt text](docs/images/import-training-prediction.png)
   
+### 4. Admin Page
+
+#### 4.1 Login
+
+![Login](docs/images/login-admin.png)
+
+Enter your username and password to access the admin account.
+
+#### 4.2 Admin Dashboard
+
+![Admin Dashboard](docs/images/admin.png)
+
+Displays all models in the database and some default models.
+
+#### 4.3 View Dataset Model Information
+
+![View Dataset Model Information](docs/images/view-dataset.png)
+
+#### 4.4 Create New Dataset Model
+
+![Create New Dataset Model](docs/images/create.png)
+
+#### 4.5 Delete Dataset Model
+
+![Delete Dataset Model](docs/images/delete-model.png)
+
+#### 4.6 Edit Dataset Model
+
+![Edit Dataset Model](docs/images/edit.png)
+
 ## Prerequisites
 
 **Due to some packages no longer being supported on Windows, to prevent unexpected errors during installation, the minimum configuration is as follows**
