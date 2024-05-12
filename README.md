@@ -34,7 +34,9 @@
       - [1.3 Setting Form](#13-setting-form)
       - [1.4 Select the total number of images for each class](#14-select-the-total-number-of-images-for-each-class)
       - [1.5 Choose images to upload](#15-choose-images-to-upload)
-      - [1.6 Prediction and reult](#16-prediction-and-reult)
+      - [1. Prediction and result](#1-prediction-and-result)
+      - [1.7 Processing training logs](#17-processing-training-logs)
+      - [1.8 Showing loss and accuracy analysis of images](#18-showing-loss-and-accuracy-analysis-of-images)
     - [2. Custom Training Page](#2-custom-training-page)
       - [2.1 Add class and add images to each class](#21-add-class-and-add-images-to-each-class)
       - [2.2 Prediction and reult](#22-prediction-and-reult)
@@ -118,9 +120,18 @@ Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 11 ✔ |
 ![alt text](docs/images/choose-file.png)
 ![alt text](docs/images/choose-file-result.png)
 
-#### 1.6 Prediction and reult
+#### 1. Prediction and result
 
 ![alt text](docs/images/prediction.png)
+
+#### 1.7 Processing training logs
+
+![alt text](docs/images/processing-train.png)
+
+#### 1.8 Showing loss and accuracy analysis of images
+
+![alt text](docs/images/show-btn-analyst.png)
+![alt text](docs/images/show-image-analyst.png)
 
 ### 2. Custom Training Page
 
