@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
-
-  if (localStorage.getItem("uuid")) showAnalyst(localStorage.getItem("uuid"));
+  localStorage.removeItem("uuid")
+  // if (localStorage.getItem("uuid")) showAnalyst(localStorage.getItem("uuid"));
 
   let searchParams = new URLSearchParams(window.location.search)
   $(`select option[value="${searchParams.get('sizes')}"]`).attr("selected", true);
