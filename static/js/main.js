@@ -14,7 +14,7 @@ function hexToRgb(hex) {
   var b = parseInt(hex.substring(4, 6), 16);
   return `${r}, ${g}, ${b}`;
 }
-function ShowToast(message = "This is a toast", title = "Data Error", type = "error") {
+function ShowToast(message = "This is a toast", title = "Error", type = "error") {
   toastr.options = {
     "closeButton": true,
     "debug": false,
