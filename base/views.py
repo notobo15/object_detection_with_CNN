@@ -396,11 +396,8 @@ def train_model2(request):
             for root, _, files in os.walk(new_folder_path):
                 for file in files:
                     file_path = os.path.join(root, file)
-                    # Kiểm tra phần mở rộng của file và chỉ zip file có phần mở rộng là .json, .bin, hoặc label.txt
-                    if file.endswith('.json') or file.endswith('.bin') or file == 'label.txt':
+                    if file.endswith('.json') or file.endswith('.bin') or file == 'label.txt' or file == 'analyst.png':
                         zipf.write(file_path, arcname=os.path.relpath(file_path, new_folder_path))
-
-        # labels = models.Label.objects.filter(dataset= models.Dataset.objects.get(""))
 
         return JsonResponse({'status': 'success', 'message': 'Model trained successfully', 'uuid': new_folder_name})
     else:
