@@ -151,7 +151,7 @@ async function convertImageToTensor(image) {
   let img = tf.browser.fromPixels(image);
   let normalizationOffset = tf.scalar(255); // 127.5
   let tensor = await img
-    .resizeNearestNeighbor([112, 112])
+    .resizeNearestNeighbor([128, 128])
     .toFloat()
     .sub(normalizationOffset)
     .div(normalizationOffset)
@@ -226,5 +226,4 @@ function showAnalyst(uuid) {
   `
   $(".show_analyst").html(html)
   $(".show_analyst").removeClass("d-none");
-
 }
