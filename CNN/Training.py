@@ -22,7 +22,7 @@ class Training:
         self.folder_path = folder_path
         self.PoolingType = PoolingType
         self.history = None
-        self.folder_train_path = None
+        
 
     def build_model(self):
         base_model = MobileNet(include_top=False, weights="imagenet", input_shape=(self.size,self.size,3))
@@ -46,7 +46,7 @@ class Training:
 
     def make_data(self):
         train_datagen = ImageDataGenerator(preprocessing_function= keras.applications.mobilenet.preprocess_input,rotation_range=0.2,
-                                           width_shift_range=0.2,   height_shift_range=0.2,shear_range=0.3,zoom_range=0.5,
+                                           width_shift_range=0.2,   height_shift_range=0.2,shear_range=0.2,zoom_range=0.5,
                                            horizontal_flip=True, vertical_flip=True,
                                            validation_split=self.test_size)
 
@@ -57,11 +57,11 @@ class Training:
                                                             subset='training')
 
         validation_generator = train_datagen.flow_from_directory(
-            self.folder_path,  # same directory as training data
+            self.folder_path,
             target_size=(self.size, self.size),
             batch_size=self.patch_sizes,
             class_mode='categorical',
-            subset='validation')  # set as validation data
+            subset='validation')
 
         return train_generator, validation_generator
 
@@ -70,15 +70,6 @@ class Training:
         self.model_checkpoint_path = os.path.join(self.folder_path,'best.hdf5') 
         checkpoint = ModelCheckpoint(self.model_checkpoint_path, monitor='val_loss', save_best_only=True, mode='auto')
         callback_list = [checkpoint]
-        
-        # step_train = train_generator.n//train_generator.batch_size
-        # step_val = validation_generator.n//validation_generator.batch_size
-
-        # self.model.fit_generator(generator=train_generator, steps_per_epoch=len(train_generator),
-        #                         validation_data=validation_generator,
-        #                         validation_steps=len(validation_generator),
-        #                         callbacks=callback_list,
-        #                         epochs=self.epochs)
 
         self.history = self.model.fit(train_generator, steps_per_epoch=len(train_generator),
                validation_data=validation_generator, validation_steps=len(validation_generator),
@@ -96,7 +87,6 @@ class Training:
 
 
     def plot_training_history(self):
-        # Lấy các giá trị loss và accuracy từ history
         history = self.history
         # epochs = self.epochs
         train_loss = history.history['loss']
