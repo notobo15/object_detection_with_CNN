@@ -15,8 +15,10 @@
 <body class="">
   {% include 'components/loading.html' %}
   {% include 'components/header.html' %}
-  {% block content %}
-  {% endblock %}
+  <div>
+    {% block content %}
+    {% endblock %}
+  </div>
   {% include 'components/footer.html' %}
   <script>
      $(document).ready(function() {
