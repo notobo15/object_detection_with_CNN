@@ -225,7 +225,7 @@ python manage.py runserver
 
 ## Authors
 
-- Nguyen Thanh Binh
+- Nguyen Thanh Binh [@notobo](https://github.com/notobo15)
 - Ngo Kieu Lam
 
 ## Copyright and Licenses
