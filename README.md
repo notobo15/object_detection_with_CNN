@@ -198,8 +198,9 @@ Displays all models in the database and some default models.
 
 ```bash
 1. Operating System: Linux
-2. Python Version: >=3.7
-3. Tensorflow Version: >=2.4
+2. Python Version: >=3.7.16
+3. Tensorflow Version: >=2.4.1
+3. Tensorflow.JS Version: >=3.3.0
 ```
 
 ## Installing
