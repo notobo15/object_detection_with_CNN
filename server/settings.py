@@ -129,14 +129,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 # SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 mimetypes.add_type("text/javascript", ".js", True)
 STATICFILES_DIRS = (
         os.path.join(BASE_DIR, os.path.join('static')),
     )
-
+if not os.path.exists(STATIC_ROOT):
+    os.makedirs(STATIC_ROOT)
     
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
