@@ -4,5 +4,5 @@ opencv-python==4.9.0.80
 Pillow==9.5.0
 tensorflow==2.4.1
 tensorflowjs==3.3.0
-numpy==1.26.4
+numpy
 django-cors-headers==4.3.1
