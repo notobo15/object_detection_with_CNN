@@ -7,3 +7,4 @@ tensorflowjs==3.3.0
 numpy
 django-cors-headers==4.3.1
 keras==2.4.3
+matplotlib==3.4.3
