@@ -1,4 +1,4 @@
-# Xây Dựng Ứng Dụng Nhận Diện Vật Thể qua mô hình CNN
+# Design and Development of a Website Object Detection Application Using Convolutional Neural Networks (CNNs)
 
 <p align="center">
   <a href="https://github.com/notobo15/object_detection_with_CNN/releases/tag/v1.1.0">
@@ -16,11 +16,12 @@
 
 ## Report
 
-[File báo cáo latex](https://www.overleaf.com/read/ggttmjkvswmt#9b40b4)
+[LaTeX Report File](https://www.overleaf.com/read/ggttmjkvswmt#9b40b4)
 
 ## Table of Contents
 
-- [Xây Dựng Ứng Dụng Nhận Diện Vật Thể qua mô hình CNN](#xây-dựng-ứng-dụng-nhận-diện-vật-thể-qua-mô-hình-cnn)
+- [Design and Development of a Website Object Detection Application Using Convolutional Neural Networks (CNNs)](#design-and-development-of-a-website-object-detection-application-using-convolutional-neural-networks-cnns)
+
   - [Report](#report)
   - [Table of Contents](#table-of-contents)
   - [Intro](#intro)
